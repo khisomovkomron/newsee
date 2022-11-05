@@ -24,6 +24,8 @@ class CreateUser(BaseModel):
     password: str
     phone_number: Optional[str]
     
+    
+bcrypt_context = CryptContext(schemes=['bcrypt'], deprecated=['auto'])
 
 router = APIRouter(
     prefix='/auth',
@@ -39,6 +41,8 @@ def get_db():
     finally:
         db.close()
         
+def get_hashed_password(password):
+    return bcrypt_context.hash(password)
 
 @router.post('/create/user')
 async def create_new_user(create_user: CreateUser,
@@ -49,7 +53,8 @@ async def create_new_user(create_user: CreateUser,
     create_user_model.first_name = create_user.first_name
     create_user_model.last_name = create_user.last_name
     create_user_model.phone_number = create_user.phone_number
-    create_user_model.hashed_password = create_user.password
+    hashed_password = get_hashed_password(create_user.password)
+    create_user_model.hashed_password = hashed_password
     
     create_user_model.is_active = True
     
