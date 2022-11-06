@@ -14,8 +14,9 @@ class Users(Base):
     hashed_password = Column(String)
     phone_number = Column(String)
     is_active = Column(Boolean, default=True)
-
-
+    
+    todo = relationship('Todo', back_populates='owner')
+    
 class Todo(Base):
     __tablename__ = 'todos'
 
@@ -25,3 +26,6 @@ class Todo(Base):
     priority = Column(Integer)
     complete = Column(Boolean, default=False)
     
+    owner_id = Column(Integer, ForeignKey('users.id'))
+    
+    owner = relationship('Users', back_populates='todo')

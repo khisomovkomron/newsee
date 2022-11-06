@@ -7,6 +7,7 @@ from database import engine, SessionLocal
 from sqlalchemy.orm import Session
 from pydantic import BaseModel, Field
 from typing import Optional
+from .auth import get_current_user, get_user_exception
 
 router = APIRouter(
     prefix='/todos',
@@ -36,11 +37,24 @@ class Todo(BaseModel):
 async def read_all_todos(db: Session = Depends(get_db)):
     return db.query(models.Todo).all()
 
+@router.get('/user')
+async def read_all_by_user(user: dict = Depends(get_current_user),
+                           db: Session = Depends(get_db)):
+    if user is None:
+        raise get_user_exception()
+    return db.query(models.Todo).filter(models.Todo.id == user.get('id')).all()
+
  
 @router.get('/{todo_id}')
 async def read_todo(todo_id: int,
-                    db: Session = Depends(get_db)):
-    todo_model = db.query(models.Todo).filter(models.Todo.id == todo_id).first()
+                    db: Session = Depends(get_db),
+                    user: dict = Depends(get_current_user)):
+    if user is None:
+        raise get_user_exception()
+    todo_model = db.query(models.Todo)\
+        .filter(models.Todo.id == todo_id)\
+        .filter(models.Todo.id == user.get('id'))\
+        .first()
     
     if todo_model is not None:
         return todo_model
@@ -49,13 +63,16 @@ async def read_todo(todo_id: int,
 
 @router.post('/')
 async def create_todo(todo: Todo,
+                      user: dict = Depends(get_current_user),
                       db: Session = Depends(get_db)):
-    
+    if user is None:
+        raise get_user_exception()
     todo_model = models.Todo()
     todo_model.title = todo.title
     todo_model.description = todo.description
     todo_model.priority = todo.priority
     todo_model.complete = todo.complete
+    todo_model.owner_id = user.get('id')
     
     db.add(todo_model)
     db.commit()
@@ -66,7 +83,10 @@ async def create_todo(todo: Todo,
 @router.put('/{todo_id}')
 async def update_todo(todo_id: int,
                       todo: Todo,
+                      user: dict = Depends(get_current_user),
                       db: Session = Depends(get_db)):
+    if user is None:
+        raise get_user_exception()
     
     todo_model = db.query(models.Todo).filter(models.Todo.id == todo_id).first()
     
@@ -86,9 +106,15 @@ async def update_todo(todo_id: int,
 
 @router.delete('/{todo_id}')
 async def delete_todo(todo_id: int,
+                      user: dict = Depends(get_current_user),
                       db: Session = Depends(get_db)):
+    if user is None:
+        raise get_user_exception()
     
-    todo_model = db.query(models.Todo).filter(models.Todo.id == todo_id).first()
+    todo_model = db.query(models.Todo)\
+        .filter(models.Todo.id == todo_id)\
+        .filter(models.Todo.owner_id == user.get('id'))\
+        .first()
     
     if todo_model is None:
         return http_exception()
