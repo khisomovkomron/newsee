@@ -23,6 +23,7 @@ def get_db():
     finally:
         db.close()
         
+        
 class Address(BaseModel):
     address1: str
     address2: Optional[str]
@@ -31,7 +32,31 @@ class Address(BaseModel):
     country: str
     postalcode: str
     apt_num: Optional[int]
+
+
+@router.get('/')
+async def read_all_addresses(db: Session = Depends(get_db)):
+    return db.query(models.Address).all()
+
+
+@router.get('/{address_id}')
+async def read_address_by_id(address_id: int,
+                             user: dict = Depends(get_current_user),
+                             db: Session = Depends(get_db)):
+    if user is None:
+        raise get_user_exception()
     
+    return db.query(models.Address).filter(models.Address.id == address_id).first()
+
+
+@router.get('/user/')
+async def read_current_user_address(user: dict = Depends(get_current_user),
+                                    db: Session = Depends(get_db)):
+    if user is None:
+        raise get_user_exception()
+    
+    return db.query(models.Address).filter(models.Users.id == user.get('id')).all()
+
 
 @router.post('/')
 async def create_address(address: Address,
