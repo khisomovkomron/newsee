@@ -84,3 +84,30 @@ async def create_address(address: Address,
     db.add(user_model)
     db.commit()
     return successful_response(201)
+
+
+@router.delete('/{address_id}')
+async def delete_address(address_id: int,
+                         user: dict = Depends(get_current_user),
+                         db: Session = Depends(get_db)):
+    if user is None:
+        raise get_user_exception()
+    
+    db.query(models.Address).filter(models.Address.id == address_id).delete()
+    
+    db.commit()
+
+    return successful_response(204)
+
+
+@router.delete('/')
+async def delete_all_addresses(user: dict = Depends(get_current_user),
+                               db: Session = Depends(get_db)):
+    if user is None:
+        raise get_user_exception()
+    
+    db.query(models.Address).delete()
+    
+    db.commit()
+
+    return successful_response(204)
