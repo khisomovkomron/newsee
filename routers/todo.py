@@ -1,13 +1,17 @@
 import sys
 sys.path.append('..')
 
-from fastapi import APIRouter, Depends, HTTPException
-import models
-from database import engine, SessionLocal
-from sqlalchemy.orm import Session
-from pydantic import BaseModel, Field
-from typing import Optional
 from .auth import get_current_user, get_user_exception
+from fastapi import APIRouter, Depends, HTTPException
+from database import engine, SessionLocal
+from pydantic import BaseModel, Field
+from logs.loguru import fastapi_logs
+from sqlalchemy.orm import Session
+from typing import Optional
+import models
+
+
+logger = fastapi_logs(router='TODO')
 
 router = APIRouter(
     prefix='/todos',
@@ -35,13 +39,17 @@ class Todo(BaseModel):
 
 @router.get('/')
 async def read_all_todos(db: Session = Depends(get_db)):
+    logger.info('READING ALL TODOs')
     return db.query(models.Todo).all()
 
 @router.get('/user')
 async def read_all_by_user(user: dict = Depends(get_current_user),
                            db: Session = Depends(get_db)):
     if user is None:
+        logger.debug(get_current_user())
         raise get_user_exception()
+    
+    logger.info('Reading TODOs all by users')
     return db.query(models.Todo).filter(models.Todo.id == user.get('id')).all()
 
  

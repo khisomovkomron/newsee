@@ -1,16 +1,19 @@
 import sys
 sys.path.append('..')
 
+from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from fastapi import Depends, HTTPException, status, APIRouter
+from database import SessionLocal, engine
+from datetime import datetime, timedelta
+from passlib.context import CryptContext
+from logs.loguru import fastapi_logs
+from sqlalchemy.orm import Session
+from jose import jwt, JWTError
 from pydantic import BaseModel
 from typing import Optional
 import models
-from sqlalchemy.orm import Session
-from database import SessionLocal, engine
-from passlib.context import CryptContext
-from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
-from datetime import datetime, timedelta
-from jose import jwt, JWTError
+
+logger = fastapi_logs(router='AUTH')
 
 SECRET_KEY = "wadwad12e231iurhn342iurn"
 ALGORITHM = 'HS256'
@@ -79,6 +82,8 @@ def create_access_token(username: str, user_id: int, expired_delta: Optional[tim
 
 
 async def get_current_user(token: str = Depends(oauth2_bearer)):
+    logger.info("GETTING CURRENT USER")
+
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         username: str = payload.get('sub')
@@ -108,7 +113,8 @@ async def create_new_user(create_user: CreateUser,
     
     db.add(create_user_model)
     db.commit()
-    
+    logger.info("CREATING NEW USER")
+
     return {'status': 'Successful'}
     
 
@@ -129,6 +135,8 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     token = create_access_token(user.username,
                                 user.id,
                                 expired_delta=token_expires)
+    logger.info("CREATING NEW ACCESS TOKEN")
+
     return {'token': token}
     
     
@@ -139,6 +147,7 @@ def get_user_exception():
         detail='Coul not validate credentials',
         headers={'WWW-Authenticate': 'Bearer'}
     )
+    logger.critical(credential_exception)
     return credential_exception
 
 
@@ -149,6 +158,7 @@ def token_exception():
         detail='Incorrect username or password',
         headers={'WWW-Authenticate': 'Bearer'}
     )
+    logger.critical(token_exception)
     return token_exception
 
 

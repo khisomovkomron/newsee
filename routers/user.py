@@ -1,14 +1,15 @@
 import sys
 sys.path.append('..')
 
-from pydantic import BaseModel
-from typing import Optional
-import models
-from database import SessionLocal, Base, engine
-from fastapi import APIRouter, Depends
-from sqlalchemy.orm import Session
 from .auth import get_current_user, get_user_exception, verify_password, get_hashed_password
+from database import SessionLocal, engine
+from fastapi import APIRouter, Depends
+from logs.loguru import fastapi_logs
+from sqlalchemy.orm import Session
+from pydantic import BaseModel
+import models
 
+logger = fastapi_logs(router='USERS')
 
 router = APIRouter(
     prefix='/users',
@@ -26,6 +27,7 @@ def get_db():
     finally:
         db.close()
         
+        
 class UserVerification(BaseModel):
     username: str
     password: str
@@ -34,6 +36,8 @@ class UserVerification(BaseModel):
 
 @router.get('/')
 async def read_all(db: SessionLocal = Depends(get_db)):
+    logger.info("READING ALL USERS")
+
     return db.query(models.Users).all()
 
 

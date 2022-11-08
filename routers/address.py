@@ -1,14 +1,20 @@
 import sys
 sys.path.append('..')
 
-from fastapi import Depends, APIRouter
-from pydantic import BaseModel
-from typing import Optional
-from sqlalchemy.orm import Session
 from .auth import get_current_user, get_user_exception
 from .todo import successful_response, http_exception
+from fastapi import Depends, APIRouter
+from logs.loguru import fastapi_logs
+from sqlalchemy.orm import Session
+from database import SessionLocal
+from pydantic import BaseModel
+from typing import Optional
 import models
-from database import SessionLocal, engine
+
+
+logger = fastapi_logs(router='ADDRESS')
+
+
 router = APIRouter(
     prefix='/address',
     tags=['addres'],
@@ -36,6 +42,7 @@ class Address(BaseModel):
 
 @router.get('/')
 async def read_all_addresses(db: Session = Depends(get_db)):
+    logger.info("READING ALL ADDRESSES")
     return db.query(models.Address).all()
 
 
