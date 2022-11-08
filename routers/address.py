@@ -42,7 +42,9 @@ class Address(BaseModel):
 
 @router.get('/')
 async def read_all_addresses(db: Session = Depends(get_db)):
+    
     logger.info("READING ALL ADDRESSES")
+    
     return db.query(models.Address).all()
 
 
@@ -50,6 +52,8 @@ async def read_all_addresses(db: Session = Depends(get_db)):
 async def read_address_by_id(address_id: int,
                              user: dict = Depends(get_current_user),
                              db: Session = Depends(get_db)):
+    logger.info("READING ADDRESS BY ID")
+
     if user is None:
         raise get_user_exception()
     
@@ -59,6 +63,9 @@ async def read_address_by_id(address_id: int,
 @router.get('/user/')
 async def read_current_user_address(user: dict = Depends(get_current_user),
                                     db: Session = Depends(get_db)):
+    
+    logger.info("READING ADDRESS OF CURRENT USER")
+
     if user is None:
         raise get_user_exception()
     
@@ -69,6 +76,9 @@ async def read_current_user_address(user: dict = Depends(get_current_user),
 async def create_address(address: Address,
                          user: dict = Depends(get_current_user),
                          db: Session = Depends(get_db)):
+    
+    logger.info("CREATING ADDRESS")
+
     if user is None:
         raise get_user_exception()
     
@@ -92,11 +102,15 @@ async def create_address(address: Address,
     db.commit()
     return successful_response(201)
 
+
 @router.put('/{address_id}')
 async def update_address(address_id: int,
                          address: Address,
                          user: dict = Depends(get_current_user),
                          db: Session = Depends(get_db)):
+    
+    logger.info("UPDATING ADDRESS BY ID")
+
     if user is None:
         raise get_user_exception()
     
@@ -125,6 +139,8 @@ async def update_address(address_id: int,
 async def delete_address(address_id: int,
                          user: dict = Depends(get_current_user),
                          db: Session = Depends(get_db)):
+    logger.info("DELETING ADDRESS BY ID")
+
     if user is None:
         raise get_user_exception()
     
@@ -138,6 +154,8 @@ async def delete_address(address_id: int,
 @router.delete('/')
 async def delete_all_addresses(user: dict = Depends(get_current_user),
                                db: Session = Depends(get_db)):
+    logger.info("DELETING ALL ADDRESSES")
+
     if user is None:
         raise get_user_exception()
     
