@@ -100,6 +100,9 @@ async def get_current_user(token: str = Depends(oauth2_bearer)):
 async def create_new_user(create_user: CreateUser,
                           db: Session = Depends(get_db)):
     """Create new user: get user model from DB and pass all variables from CreateUser fields to db fields"""
+    
+    logger.info("CREATING NEW USER")
+
     create_user_model = models.Users()
     create_user_model.email = create_user.email
     create_user_model.username = create_user.username
@@ -113,7 +116,6 @@ async def create_new_user(create_user: CreateUser,
     
     db.add(create_user_model)
     db.commit()
-    logger.info("CREATING NEW USER")
 
     return {'status': 'Successful'}
     
@@ -126,6 +128,9 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
      2. authenticate user
      3. generate new token
      4. return token"""
+    
+    logger.info("CREATING NEW ACCESS TOKEN")
+
     user = authenticate_user(form_data.username, form_data.password, db)
     
     if not user:
@@ -135,7 +140,6 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     token = create_access_token(user.username,
                                 user.id,
                                 expired_delta=token_expires)
-    logger.info("CREATING NEW ACCESS TOKEN")
 
     return {'token': token}
     
