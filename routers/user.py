@@ -45,6 +45,8 @@ async def read_all(db: SessionLocal = Depends(get_db)):
 async def user_by_path(user_id: int, db: Session = Depends(get_db)):
     user_model = db.query(models.Users).filter(models.Users.id == user_id).first()
     
+    logger.info("READING USER BY BY PATH")
+
     if user_model is not None:
         return user_model
     return 'Invalid used_id'
@@ -54,6 +56,8 @@ async def user_by_path(user_id: int, db: Session = Depends(get_db)):
 async def user_by_query(user_id: int, db: Session = Depends(get_db)):
     user_model = db.query(models.Users).filter(models.Users.id == user_id).first()
     
+    logger.info("READING USER BY ID BY QUERY")
+
     if user_model is not None:
         return user_model
     return 'Invalid user_id'
@@ -64,11 +68,15 @@ async def user_password_change(user_verification: UserVerification,
                                user: dict = Depends(get_current_user),
                                db: Session = Depends(get_db)):
     """Change password authenticated"""
+    
+
     if user is None:
         raise get_user_exception()
     
     user_model = db.query(models.Users).filter(models.Users.id == user.get('id')).first()
     
+    logger.info("CHANGING USER PASSWORD")
+
     if user_model is not None:
         if user_verification.username == user_model.username and verify_password(
                 user_verification.password,
@@ -86,6 +94,8 @@ async def user_password_change(user_verification: UserVerification,
 async def delete_user_by_id(user_id: int,
                             db: Session = Depends(get_db)):
     """Delete user by id unauthenticated"""
+    logger.info("DELETE USER BY ID")
+
     user_model = db.query(models.Users).filter(models.Users.id == user_id).first()
     
     if user_model is None:
@@ -104,6 +114,8 @@ async def delete_user_by_id(user_id: int,
 async def delete_user(user: dict = Depends(get_current_user),
                       db: Session = Depends(get_db)):
     """Delete user authenticated"""
+    logger.info("DELETE AUTHENTICATED USER")
+
     if user is None:
         return get_user_exception()
     
