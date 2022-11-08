@@ -45,11 +45,12 @@ async def read_all_todos(db: Session = Depends(get_db)):
 @router.get('/user')
 async def read_all_by_user(user: dict = Depends(get_current_user),
                            db: Session = Depends(get_db)):
+    logger.info('Reading TODOs all by users')
+
     if user is None:
         logger.debug(get_current_user())
         raise get_user_exception()
     
-    logger.info('Reading TODOs all by users')
     return db.query(models.Todo).filter(models.Todo.id == user.get('id')).all()
 
  
@@ -57,6 +58,8 @@ async def read_all_by_user(user: dict = Depends(get_current_user),
 async def read_todo(todo_id: int,
                     db: Session = Depends(get_db),
                     user: dict = Depends(get_current_user)):
+    logger.info('Reading TODOs BY ID')
+
     if user is None:
         raise get_user_exception()
     todo_model = db.query(models.Todo)\
@@ -73,6 +76,8 @@ async def read_todo(todo_id: int,
 async def create_todo(todo: Todo,
                       user: dict = Depends(get_current_user),
                       db: Session = Depends(get_db)):
+    logger.info('CREATING TODOs')
+
     if user is None:
         raise get_user_exception()
     todo_model = models.Todo()
@@ -93,6 +98,8 @@ async def update_todo(todo_id: int,
                       todo: Todo,
                       user: dict = Depends(get_current_user),
                       db: Session = Depends(get_db)):
+    logger.info('UPDATING TODOs')
+
     if user is None:
         raise get_user_exception()
     
@@ -116,6 +123,8 @@ async def update_todo(todo_id: int,
 async def delete_todo(todo_id: int,
                       user: dict = Depends(get_current_user),
                       db: Session = Depends(get_db)):
+    logger.info('DELETING TODOs BY ID')
+
     if user is None:
         raise get_user_exception()
     
