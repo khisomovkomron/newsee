@@ -1,0 +1,1 @@
+# 3 days learned about Redis to integrate it to project, but at this moment i understood that it is early yet
