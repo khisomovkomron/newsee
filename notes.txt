@@ -1,1 +1,11 @@
 # 3 days learned about Redis to integrate it to project, but at this moment i understood that it is early yet
+
+# the next step is to create a new microservice Profile or anything else and to give a try to interact with our
+# microservice to-do, we will use
+#   - requests,
+#   - asynchronous requests,
+#   - nested bodies,
+#   - will work more with DB
+#   - will work more with docker
+#   - add more apis to to-do service and new service
+#   - second microservice will be on Tortoise ORM
