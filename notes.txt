@@ -1,11 +1,31 @@
 # 3 days learned about Redis to integrate it to project, but at this moment i understood that it is early yet
 
-# the next step is to create a new microservice Profile or anything else and to give a try to interact with our
-# microservice to-do, we will use
+# PART I - start app, learn working with framework
+# ROUTERS - AUTH, ADDRESS, TO-DO, USER
+# ALEMBIC
+# POSTGRES
+# DOCKER
+
+# PART II - consolidate acquired knowledge, add new endpoint, learn nested bodies - DEADLINE 1.12.2022
+#   - nested bodies,
+# - ROUTER - PROFILE, ARCHIVE
+    # - /info - gather all info of a user into one endpoint - USER, TOKEN, ADDRESS, TODOS
+# - all deleted todos passed in ARCHIVE, all done todos are passed to ARCHIEVE
+    # - /archive/deletes - read all deleted todos of a user
+    # - /archieve/todos - read all completed todos of a user
+    # - /archieve - read all deleted and completed todos of a user
+    # - /archieve/clean - clean an archieve of a user
+# - new columsa and endpoints to to-do
+    # - /todos/titles
+    # - column - createdat, createdby, modifiedat, modifiedby
+    # -
+# - read asyncio, asynchttp
+# - read design pattern
+
+# PART III - new microservice, broker, interaction of microservice, deployment
+# - deployment in AWS
+# -
 #   - requests,
 #   - asynchronous requests,
-#   - nested bodies,
-#   - will work more with DB
-#   - will work more with docker
 #   - add more apis to to-do service and new service
 #   - second microservice will be on Tortoise ORM
