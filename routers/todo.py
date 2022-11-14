@@ -9,7 +9,7 @@ from logs.loguru import fastapi_logs
 from sqlalchemy.orm import Session
 from typing import Optional
 import models
-
+from .archive import Archive
 
 logger = fastapi_logs(router='TODO')
 

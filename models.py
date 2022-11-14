@@ -46,3 +46,11 @@ class Address(Base):
     apt_num = Column(Integer)
 
     user_address = relationship('Users', back_populates='address')
+    
+    
+class Archive(Base):
+    __tablename__ = 'archive'
+    
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String)
+    status = Column(Boolean)
