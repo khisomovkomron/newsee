@@ -2,13 +2,11 @@ import sys
 sys.path.append('..')
 
 from .auth import get_current_user, get_user_exception
-from .todo import successful_response, http_exception
 from fastapi import Depends, APIRouter
 from logs.loguru import fastapi_logs
 from sqlalchemy.orm import Session
 from database import SessionLocal
 from pydantic import BaseModel
-from typing import Optional
 import models
 
 from .auth import CreateUser, create_access_token

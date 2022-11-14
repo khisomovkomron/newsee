@@ -140,6 +140,7 @@ async def delete_todo(todo_id: int,
     archive_model = models.Archive()
     archive_model.title = todo_model.title
     archive_model.status = todo_model.complete
+    db.add(archive_model)
     
     db.query(models.Todo).filter(models.Todo.id == todo_id).delete()
     

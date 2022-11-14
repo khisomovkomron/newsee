@@ -2,7 +2,6 @@ import sys
 sys.path.append('..')
 
 from .auth import get_current_user, get_user_exception
-from .todo import successful_response, http_exception
 from fastapi import Depends, APIRouter
 from logs.loguru import fastapi_logs
 from sqlalchemy.orm import Session

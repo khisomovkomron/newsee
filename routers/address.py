@@ -17,7 +17,7 @@ logger = fastapi_logs(router='ADDRESS')
 
 router = APIRouter(
     prefix='/address',
-    tags=['addres'],
+    tags=['address'],
     responses={404: {'description': 'Not found'}}
 )
 
