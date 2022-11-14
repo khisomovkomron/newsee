@@ -42,6 +42,7 @@ async def read_all_todos(db: Session = Depends(get_db)):
     logger.info('READING ALL TODOs')
     return db.query(models.Todo).all()
 
+
 @router.get('/user')
 async def read_all_by_user(user: dict = Depends(get_current_user),
                            db: Session = Depends(get_db)):
@@ -135,6 +136,10 @@ async def delete_todo(todo_id: int,
     
     if todo_model is None:
         return http_exception()
+    
+    archive_model = models.Archive()
+    archive_model.title = todo_model.title
+    archive_model.status = todo_model.complete
     
     db.query(models.Todo).filter(models.Todo.id == todo_id).delete()
     
