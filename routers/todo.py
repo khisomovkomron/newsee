@@ -52,7 +52,7 @@ async def read_all_by_user(user: dict = Depends(get_current_user),
         logger.debug(get_current_user())
         raise get_user_exception()
     
-    return db.query(models.Todo).filter(models.Todo.id == user.get('id')).all()
+    return db.query(models.Todo).filter(models.Todo.owner_id == user.get('id')).all()
 
  
 @router.get('/{todo_id}')

@@ -60,3 +60,15 @@
 - asynchronous requests
 - add more apis to new service and new service
 - second microservice will be on Tortoise ORM
+
+
+# LEARNING
+
+In order to avoid vacancies in Github contribuiton, I will take notes in 
+this README file. Dates and topics will be included
+
+### 14.11.2022
+
+- learning asynchronous programming with Python
+- asyncio, httpx
+- asynchronous contextmanager "async with"
