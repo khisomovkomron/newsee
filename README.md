@@ -72,3 +72,12 @@ this README file. Dates and topics will be included
 - learning asynchronous programming with Python
 - asyncio, httpx
 - asynchronous contextmanager "async with"
+
+### 17.11.2022
+
+- asyncio
+- create tasks
+- coroutines, tasks, futures
+- running tasks concurrently
+- tasks group 3.11
+- tasks cancellation 3.11
