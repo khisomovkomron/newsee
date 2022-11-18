@@ -1,8 +1,8 @@
 import sys
 sys.path.append('..')
 
-from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
-from fastapi import Depends, HTTPException, status, APIRouter
+from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer, HTTPBearer
+from fastapi import Depends, HTTPException, status, APIRouter, Header
 from database import SessionLocal, engine
 from datetime import datetime, timedelta
 from passlib.context import CryptContext
@@ -25,14 +25,14 @@ class CreateUser(BaseModel):
     first_name: str
     last_name: str
     password: str
-    phone_number: Optional[str]
+    phone_number: Optional[str] | None = None
     
     
 bcrypt_context = CryptContext(schemes=['bcrypt'], deprecated=['auto'])
 
 models.Base.metadata.create_all(bind=engine)
 
-oauth2_bearer = OAuth2PasswordBearer(tokenUrl='token')
+oauth2_bearer = OAuth2PasswordBearer(tokenUrl='token', description='Bearer Token')
 
 router = APIRouter(
     prefix='/auth',
@@ -116,8 +116,32 @@ async def create_new_user(create_user: CreateUser,
     
     db.add(create_user_model)
     db.commit()
-
+    
     return {'status': 'Successful'}
+
+
+@router.get('/me')
+async def token_get_current_user(user: dict = Depends(get_current_user),
+                                 db: SessionLocal = Depends(get_db)):
+    user_model = db.query(models.Users) \
+        .filter(models.Users.id == user.get('id')) \
+        .first()
+    if not user_model:
+        user_model = None
+    return user_model
+
+
+@router.post('/me')
+async def form_get_current_user(form_data: OAuth2PasswordRequestForm = Depends(),
+                                db: Session = Depends(get_db)):
+    user = authenticate_user(form_data.username, form_data.password, db)
+    if not user:
+        raise get_user_exception()
+    user_model = db.query(models.Users).filter(models.Users.id == user.id).first()
+    token = create_access_token(form_data.username, user.id)
+
+    return {'user': user_model,
+            'token': token}
     
 
 @router.post('/token')
