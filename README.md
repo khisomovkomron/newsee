@@ -67,7 +67,7 @@
 In order to avoid vacancies in Github contribuiton, I will take notes in 
 this README file. Dates and topics will be included
 
-### 14.11.2022
+### 14-15.11.2022
 
 - learning asynchronous programming with Python
 - asyncio, httpx
