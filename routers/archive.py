@@ -45,6 +45,7 @@ async def archive_deleted_tasks(db: Session = Depends(get_db)):
 async def archive_completed_tasks(db: Session = Depends(get_db)):
     return db.query(models.Archive).filter(models.Archive.status == 'true').all()
 
+
 @router.delete('/archive/clean')
 async def delete_archive():
     pass

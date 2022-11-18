@@ -38,7 +38,7 @@ class Profile(BaseModel):
     todo: Todo
     
     
-@router.get('/info', response_model=Profile)
+@router.get('/info')
 async def profile_info(user: dict = Depends(get_current_user),
                        db: Session = Depends(get_db)):
     if user is None:
