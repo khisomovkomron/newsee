@@ -81,3 +81,13 @@ this README file. Dates and topics will be included
 - running tasks concurrently
 - tasks group 3.11
 - tasks cancellation 3.11
+
+### 26.11.2022
+
+- apache kafka
+- brokers
+- zookeeper
+- topics
+- messages
+- producer
+- consumer
