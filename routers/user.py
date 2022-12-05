@@ -9,14 +9,11 @@ from utils.auth_helpers import \
 
 from utils.todo_exceptions import get_user_exception
 
-from database_pack.database import SessionLocal, engine
 from database_pack.schemas import UserVerification
-from database_pack.getDB import get_db
-from database_pack import models
+
 
 from fastapi import APIRouter, Depends
 from logs.loguru import fastapi_logs
-from sqlalchemy.orm import Session
 
 logger = fastapi_logs(router='USERS')
 
@@ -26,7 +23,8 @@ router = APIRouter(
     responses={404: {'description': 'Not found'}}
 )
 
-models.Base.metadata.create_all(bind=engine)
+def get_db():
+    pass
 
 
 @router.get('/')

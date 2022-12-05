@@ -17,7 +17,6 @@ from fastapi import Depends, APIRouter
 from sqlalchemy.orm import Session
 from logs.loguru import fastapi_logs
 
-from database_pack.database import SessionLocal, engine
 from database_pack.schemas import CreateUser
 from database_pack.getDB import get_db
 from database_pack import models
@@ -26,7 +25,6 @@ from datetime import timedelta
 
 logger = fastapi_logs(router='AUTH')
 
-models.Base.metadata.create_all(bind=engine)
 
 router = APIRouter(
     prefix='/auth',

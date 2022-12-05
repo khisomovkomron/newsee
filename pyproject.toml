@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "newsee virtual env"
+version = "0.1.0"
+description = ""
+authors = ["k.hisomov <normok_9595@bk.ru>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.88.0"
+python-jose = "^3.3.0"
+tortoise-orm = "^0.19.2"
+bcrypt = "^4.0.1"
+passlib = "^1.7.4"
+python-multipart = "^0.0.5"
+uvicorn = "^0.20.0"
+loguru = "^0.6.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
