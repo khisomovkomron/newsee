@@ -2,7 +2,11 @@ import shutil
 import sys
 sys.path.append('..')
 
-from .auth import get_current_user, get_user_exception
+from .auth import get_current_user
+from utils.todo_exceptions import \
+    get_user_exception, \
+    http_exception, \
+    successful_response
 
 from fastapi import APIRouter, \
     Depends, \
@@ -19,7 +23,6 @@ from logs.loguru import fastapi_logs
 from sqlalchemy.orm import Session
 
 import openpyxl
-
 
 logger = fastapi_logs(router='TODO')
 
@@ -89,6 +92,33 @@ async def create_todo(todo: Todo,
     return successful_response(201)
 
 
+@router.post('/xlsx')
+async def import_xlsx_data(file: UploadFile = File(...),
+                           db: Session = Depends(get_db),
+                           user: dict = Depends(get_current_user)):
+    if not file:
+        raise HTTPException(status_code=404, detail='File not found')
+    if user is None:
+        raise get_user_exception()
+    
+    with open(f'{file.filename}', 'wb') as buffer:
+        shutil.copyfileobj(file.file, buffer)
+        todos = openpyxl.load_workbook(file.filename, read_only=False)
+        sheet = todos.active
+        for row in range(2, sheet.max_row + 1):
+            todo_model = models.Todo()
+            todo_model.title = sheet[row][0].value
+            todo_model.description = sheet[row][1].value
+            todo_model.priority = sheet[row][2].value
+            todo_model.complete = bool(sheet[row][3].value)
+            todo_model.owner_id = user.get('id')
+    
+            db.add(todo_model)
+            db.commit()
+    
+    return successful_response(200)
+
+
 @router.put('/{todo_id}')
 async def update_todo(todo_id: int,
                       todo: Todo,
@@ -140,43 +170,5 @@ async def delete_todo(todo_id: int,
     db.query(models.Todo).filter(models.Todo.id == todo_id).delete()
     
     db.commit()
-    
-    return successful_response(200)
-
-
-def successful_response(status_code):
-    return {
-        'status': status_code,
-        'transaction': 'Successful'
-    }
-
-
-def http_exception():
-    raise HTTPException(status_code=404, detail='Not found')
-
-
-@router.post('/xlsx')
-async def import_xlsx_data(file: UploadFile = File(...),
-                           db: Session = Depends(get_db),
-                           user: dict = Depends(get_current_user)):
-    if not file:
-        raise HTTPException(status_code=404, detail='File not found')
-    if user is None:
-        raise get_user_exception()
-    
-    with open(f'{file.filename}', 'wb') as buffer:
-        shutil.copyfileobj(file.file, buffer)
-        todos = openpyxl.load_workbook(file.filename, read_only=False)
-        sheet = todos.active
-        for row in range(2, sheet.max_row + 1):
-            todo_model = models.Todo()
-            todo_model.title = sheet[row][0].value
-            todo_model.description = sheet[row][1].value
-            todo_model.priority = sheet[row][2].value
-            todo_model.complete = bool(sheet[row][3].value)
-            todo_model.owner_id = user.get('id')
-    
-            db.add(todo_model)
-            db.commit()
     
     return successful_response(200)

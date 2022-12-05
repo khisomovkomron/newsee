@@ -6,7 +6,6 @@ from logs.loguru import fastapi_logs
 from sqlalchemy.orm import Session
 
 from database_pack.getDB import get_db
-from database_pack.schemas import Archive
 from database_pack import models
 
 logger = fastapi_logs(router='ARCHIVE')

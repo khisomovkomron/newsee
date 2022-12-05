@@ -4,7 +4,8 @@ from database_pack.schemas import UserVerification
 
 sys.path.append('..')
 
-from .auth import get_current_user, get_user_exception, verify_password, get_hashed_password
+from .auth import get_current_user, verify_password, get_hashed_password
+from utils.todo_exceptions import get_user_exception
 from database_pack.database import SessionLocal, engine
 from database_pack.getDB import get_db
 from database_pack import models
@@ -58,7 +59,6 @@ async def user_password_change(user_verification: UserVerification,
                                db: Session = Depends(get_db)):
     """Change password authenticated"""
     
-
     if user is None:
         raise get_user_exception()
     

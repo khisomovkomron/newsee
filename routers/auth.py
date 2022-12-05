@@ -1,10 +1,11 @@
 import sys
 
+from utils.todo_exceptions import get_user_exception, token_exception
 
 sys.path.append('..')
 
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
-from fastapi import Depends, HTTPException, status, APIRouter
+from fastapi import Depends, APIRouter
 from sqlalchemy.orm import Session
 from logs.loguru import fastapi_logs
 
@@ -153,28 +154,5 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
                                 expired_delta=token_expires)
 
     return {'token': token}
-    
-    
-def get_user_exception():
-    """ returns HTTP exception if users credentials are wrong"""
-    credential_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail='Coul not validate credentials',
-        headers={'WWW-Authenticate': 'Bearer'}
-    )
-    logger.critical(credential_exception)
-    return credential_exception
 
 
-def token_exception():
-    """returns HTTP exception if provided token by user is invalid"""
-    token_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail='Incorrect username or password',
-        headers={'WWW-Authenticate': 'Bearer'}
-    )
-    logger.critical(token_exception)
-    return token_exception
-
-
-    
