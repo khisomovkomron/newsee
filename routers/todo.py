@@ -186,12 +186,4 @@ async def import_xlsx_data(file: UploadFile = File(...),
             db.add(todo_model)
             db.commit()
     
-
-    
- 
     return successful_response(200)
-
-
-    
-    
-    
