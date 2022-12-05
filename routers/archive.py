@@ -1,7 +1,10 @@
 import sys
 sys.path.append('..')
 
-from fastapi import Depends, APIRouter
+from fastapi import \
+    Depends, \
+    APIRouter
+
 from logs.loguru import fastapi_logs
 from sqlalchemy.orm import Session
 

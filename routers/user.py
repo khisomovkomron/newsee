@@ -1,14 +1,19 @@
 import sys
-
-from database_pack.schemas import UserVerification
-
 sys.path.append('..')
 
-from utils.auth_helpers import get_hashed_password, verify_password, get_current_user
+
+from utils.auth_helpers import \
+    get_hashed_password, \
+    verify_password,\
+    get_current_user
+
 from utils.todo_exceptions import get_user_exception
+
 from database_pack.database import SessionLocal, engine
+from database_pack.schemas import UserVerification
 from database_pack.getDB import get_db
 from database_pack import models
+
 from fastapi import APIRouter, Depends
 from logs.loguru import fastapi_logs
 from sqlalchemy.orm import Session

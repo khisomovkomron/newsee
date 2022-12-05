@@ -3,8 +3,12 @@ import sys
 
 sys.path.append('..')
 
+from utils.todo_exceptions import \
+    get_user_exception, \
+    http_exception, \
+    successful_response
+
 from utils.auth_helpers import get_current_user
-from utils.todo_exceptions import get_user_exception, http_exception, successful_response
 
 from fastapi import Depends, APIRouter
 from logs.loguru import fastapi_logs
@@ -118,6 +122,7 @@ async def update_address(address_id: int,
     db.commit()
     
     return successful_response(200)
+
 
 @router.delete('/{address_id}')
 async def delete_address(address_id: int,
