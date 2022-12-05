@@ -1,13 +1,22 @@
 import sys
 sys.path.append('..')
 
-from .auth import get_current_user, get_user_exception, verify_password, get_hashed_password
-from database import SessionLocal, engine
+
+from utils.auth_helpers import \
+    get_hashed_password, \
+    verify_password,\
+    get_current_user
+
+from utils.todo_exceptions import get_user_exception
+
+from database_pack.database import SessionLocal, engine
+from database_pack.schemas import UserVerification
+from database_pack.getDB import get_db
+from database_pack import models
+
 from fastapi import APIRouter, Depends
 from logs.loguru import fastapi_logs
 from sqlalchemy.orm import Session
-from pydantic import BaseModel
-import models
 
 logger = fastapi_logs(router='USERS')
 
@@ -18,20 +27,6 @@ router = APIRouter(
 )
 
 models.Base.metadata.create_all(bind=engine)
-
-
-def get_db():
-    try:
-        db = SessionLocal()
-        yield db
-    finally:
-        db.close()
-        
-        
-class UserVerification(BaseModel):
-    username: str
-    password: str
-    new_password: str
 
 
 @router.get('/')
@@ -69,7 +64,6 @@ async def user_password_change(user_verification: UserVerification,
                                db: Session = Depends(get_db)):
     """Change password authenticated"""
     
-
     if user is None:
         raise get_user_exception()
     

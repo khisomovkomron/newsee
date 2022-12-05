@@ -1,16 +1,22 @@
 import sys
+
+
 sys.path.append('..')
 
-from .auth import get_current_user, get_user_exception
-from .todo import successful_response, http_exception
+from utils.todo_exceptions import \
+    get_user_exception, \
+    http_exception, \
+    successful_response
+
+from utils.auth_helpers import get_current_user
+
 from fastapi import Depends, APIRouter
 from logs.loguru import fastapi_logs
 from sqlalchemy.orm import Session
-from database import SessionLocal
-from pydantic import BaseModel
-from typing import Optional
-import models
 
+from database_pack.schemas import Address
+from database_pack.getDB import get_db
+from database_pack import models
 
 logger = fastapi_logs(router='ADDRESS')
 
@@ -20,24 +26,6 @@ router = APIRouter(
     tags=['address'],
     responses={404: {'description': 'Not found'}}
 )
-
-
-def get_db():
-    try:
-        db = SessionLocal()
-        yield db
-    finally:
-        db.close()
-        
-        
-class Address(BaseModel):
-    address1: str
-    address2: Optional[str]
-    city: str
-    state: str
-    country: str
-    postalcode: str
-    apt_num: Optional[int]
 
 
 @router.get('/')
@@ -134,6 +122,7 @@ async def update_address(address_id: int,
     db.commit()
     
     return successful_response(200)
+
 
 @router.delete('/{address_id}')
 async def delete_address(address_id: int,
