@@ -3,7 +3,7 @@ import sys
 
 sys.path.append('..')
 
-from .auth import get_current_user
+from utils.auth_helpers import get_current_user
 from utils.todo_exceptions import get_user_exception, http_exception, successful_response
 
 from fastapi import Depends, APIRouter

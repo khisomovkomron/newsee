@@ -1,7 +1,8 @@
 from fastapi import HTTPException
 from starlette import status
-
 from logs.loguru import fastapi_logs
+
+
 logger = fastapi_logs(router='AUTH')
 
 

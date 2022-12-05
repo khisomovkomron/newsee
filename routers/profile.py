@@ -2,7 +2,6 @@ import sys
 
 sys.path.append('..')
 
-from .auth import get_current_user
 from utils.todo_exceptions import get_user_exception
 from fastapi import Depends, APIRouter
 from logs.loguru import fastapi_logs
@@ -10,7 +9,7 @@ from sqlalchemy.orm import Session
 from database_pack.getDB import get_db
 from database_pack import models
 
-from .auth import create_access_token
+from utils.auth_helpers import create_access_token, get_current_user
 
 logger = fastapi_logs(router='PROFILE')
 

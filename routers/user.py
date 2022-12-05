@@ -4,7 +4,7 @@ from database_pack.schemas import UserVerification
 
 sys.path.append('..')
 
-from .auth import get_current_user, verify_password, get_hashed_password
+from utils.auth_helpers import get_hashed_password, verify_password, get_current_user
 from utils.todo_exceptions import get_user_exception
 from database_pack.database import SessionLocal, engine
 from database_pack.getDB import get_db
