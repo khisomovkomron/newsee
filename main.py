@@ -4,9 +4,9 @@ from routers import todo, \
     address, \
     profile, \
     archive
-from database import engine
+from database_pack.database import engine
+from database_pack import models
 from fastapi import FastAPI
-import models
 
 app = FastAPI(
     title='TODO LEARNING PROJECT',

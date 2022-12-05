@@ -1,18 +1,26 @@
-import os
 import shutil
 import sys
 sys.path.append('..')
 
 from .auth import get_current_user, get_user_exception
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
-from database import engine, SessionLocal
-from pydantic import BaseModel, Field
+
+from fastapi import APIRouter, \
+    Depends, \
+    HTTPException, \
+    UploadFile, \
+    File
+
+from database_pack.database import engine
+from database_pack.schemas import Todo
+from database_pack.getDB import get_db
+from database_pack import models
+
 from logs.loguru import fastapi_logs
 from sqlalchemy.orm import Session
-from typing import Optional
-import models
 
 import openpyxl
+
+
 logger = fastapi_logs(router='TODO')
 
 router = APIRouter(
@@ -22,21 +30,6 @@ router = APIRouter(
 )
 
 models.Base.metadata.create_all(bind=engine)
-
-
-def get_db():
-    try:
-        db = SessionLocal()
-        yield db
-    finally:
-        db.close()
-        
-        
-class Todo(BaseModel):
-    title: str
-    description: Optional[str]
-    priority: int = Field(gt=0, lt=6, description='The priority must be between 1-5')
-    complete: bool
 
 
 @router.get('/')

@@ -1,33 +1,28 @@
 import sys
+
+
 sys.path.append('..')
 
-from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer, HTTPBearer
-from fastapi import Depends, HTTPException, status, APIRouter, Header
-from database import SessionLocal, engine
+from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
+from fastapi import Depends, HTTPException, status, APIRouter
+from sqlalchemy.orm import Session
+from logs.loguru import fastapi_logs
+
+from database_pack.database import SessionLocal, engine
+from database_pack.schemas import CreateUser
+from database_pack.getDB import get_db
+from database_pack import models
+
 from datetime import datetime, timedelta
 from passlib.context import CryptContext
-from logs.loguru import fastapi_logs
-from sqlalchemy.orm import Session
 from jose import jwt, JWTError
-from pydantic import BaseModel
 from typing import Optional
-import models
 
 logger = fastapi_logs(router='AUTH')
 
 SECRET_KEY = "wadwad12e231iurhn342iurn"
 ALGORITHM = 'HS256'
 
-
-class CreateUser(BaseModel):
-    username: str
-    email: Optional[str]
-    first_name: str
-    last_name: str
-    password: str
-    phone_number: Optional[str] | None = None
-    
-    
 bcrypt_context = CryptContext(schemes=['bcrypt'], deprecated=['auto'])
 
 models.Base.metadata.create_all(bind=engine)
@@ -40,14 +35,6 @@ router = APIRouter(
     responses={401: {'users': 'Not authorized'}}
 )
 
-
-def get_db():
-    try:
-        db = SessionLocal()
-        yield db
-    finally:
-        db.close()
-        
 
 def get_hashed_password(password):
     """hashed proved password"""
