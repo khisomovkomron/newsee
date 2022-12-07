@@ -16,6 +16,9 @@ def get_user_exception():
     logger.critical(credential_exception)
     return credential_exception
 
+def user_exception():
+    raise HTTPException(status_code=400, detail="User already exists")
+
 
 def token_exception():
     """returns HTTP exception if provided token by user is invalid"""

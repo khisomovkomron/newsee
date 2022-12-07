@@ -1,5 +1,6 @@
 from tortoise.models import Model
 from tortoise import fields
+from tortoise.contrib.pydantic import pydantic_model_creator
 
 
 class Users(Model):
@@ -17,3 +18,15 @@ class Users(Model):
     def __str__(self):
         return self.username
     
+    class Meta:
+        ordering = ["name"]
+        
+        
+class Verification(Model):
+    """ Модель для подтверждения регистрации пользователя
+    """
+    link = fields.UUIDField(pk=True)
+    user = fields.ForeignKeyField('models.Users', related_name='verification')
+
+
+user_pydantic = pydantic_model_creator(Users)
