@@ -1,13 +1,14 @@
-from tortoise.models import Model
+from tortoise import models
 from tortoise import fields
 from tortoise.contrib.pydantic import pydantic_model_creator
-
-
-class Users(Model):
+from tortoise import Tortoise
+from tortoise.contrib.fastapi import register_tortoise
+from config import settings
+class Users(models.Model):
     
     id = fields.IntField(pk=True)
-    email = fields.CharField(unique=True, index=True, max_length=100)
     username = fields.CharField(unique=True, index=True, max_length=100)
+    email = fields.CharField(unique=True, index=True, max_length=100)
     first_name = fields.CharField(max_length=50, null=True)
     second_name = fields.CharField(max_length=50, null=True)
     hashed_password = fields.CharField(max_length=200)
@@ -20,13 +21,5 @@ class Users(Model):
     
     class Meta:
         ordering = ["name"]
-        
-        
-class Verification(Model):
-    """ Модель для подтверждения регистрации пользователя
-    """
-    link = fields.UUIDField(pk=True)
-    user = fields.ForeignKeyField('models.Users', related_name='verification')
 
 
-user_pydantic = pydantic_model_creator(Users)

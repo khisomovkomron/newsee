@@ -7,7 +7,8 @@ from fastapi.security import OAuth2PasswordBearer
 from jose import jwt, JWTError
 from passlib.context import CryptContext
 
-from database_pack import models, schemas
+from db import \
+    models, schemas
 from utils import service
 from utils.todo_exceptions import get_user_exception
 from logs.loguru import fastapi_logs
@@ -20,14 +21,12 @@ bcrypt_context = CryptContext(schemes=['bcrypt'], deprecated=['auto'])
 oauth2_bearer = OAuth2PasswordBearer(tokenUrl='token', description='Bearer Token')
 
 
-async def registration(new_user: schemas.CreateUser, task: BackgroundTasks) -> bool:
-    if models.Users.filter(Q(username=new_user.username) | Q(email=new_user.email)).exists():
-        return True
+async def registration(create_user: schemas.CreateUser):
+    if models.Users.filter(Q(username=create_user.username) | Q(email=create_user.email)).exists():
+        return get_user_exception()
     else:
-        user = await service.user_s.create_user(new_user)
-        verify = await models.Verification.create(user_id=user.id)
-        task.add_task(user, verify)
-        return False
+        await service.user_s.create_user(create_user)
+        return True
     
 
 def get_hashed_password(password):

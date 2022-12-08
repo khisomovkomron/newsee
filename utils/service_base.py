@@ -21,7 +21,7 @@ class BaseService:
 
     async def create(self, schema, *args, **kwargs) -> Optional[CreateSchemaType]:
         obj = await self.model.create(**schema.dict(exclude_unset=True), **kwargs)
-        return await self.get_schema.from_tortoise_orm(obj)
+        return await self.create_schema.from_tortoise_orm(obj)
 
     async def update(self, schema, **kwargs) -> Optional[UpdateSchemaType]:
         await self.model.filter(**kwargs).update(**schema.dict(exclude_unset=True))

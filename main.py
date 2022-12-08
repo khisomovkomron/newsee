@@ -1,8 +1,13 @@
 from routers import user, auth
 from fastapi import FastAPI
 from tortoise.contrib.fastapi import register_tortoise
+from tortoise import Tortoise
 from config import settings
 from loguru import logger
+from db.models import Users
+from tortoise import run_async
+from tortoise.contrib.pydantic import pydantic_model_creator
+
 
 app = FastAPI(
     title='NEWSEE',
@@ -14,6 +19,8 @@ app.include_router(router=auth.router)
 # app.include_router(router=user.router)
 
 logger.info('    RUNNING main.py')
+
+
 register_tortoise(
     app,
     db_url="postgres://postgres:123abcDEF@localhost/NewseeDatabase",

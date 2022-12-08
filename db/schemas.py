@@ -16,14 +16,14 @@ class CreateUser(BaseModel):
     
     class Config:
         orm_mode = True
-    
+
 
 class UserVerification(BaseModel):
     username: str
     password: str
     new_password: str
-    
 
 
-user_create_pydantic = pydantic_model_creator(Users, name='create_user', exclude_readonly=True, exclude=('is_active',))
+# user_create_pydantic = pydantic_model_creator(Users, name='create_user', exclude_readonly=True)
+user_create_pydantic = pydantic_model_creator(Users)
 user_get_pydantic = pydantic_model_creator(Users, name='user')

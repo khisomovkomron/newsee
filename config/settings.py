@@ -6,6 +6,6 @@ SECRET_KEY = "wadwad12e231iurhn342iurn"
 ALGORITHM = 'HS256'
 
 APPS_MODELS = [
-    "database_pack.models",
+    "db.models",
     "aerich.models",
 ]

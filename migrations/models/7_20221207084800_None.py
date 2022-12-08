@@ -12,8 +12,7 @@ async def upgrade(db: BaseDBAsyncClient) -> str:
     "hashed_password" VARCHAR(200) NOT NULL,
     "phone_number" INT,
     "is_active" BOOL NOT NULL  DEFAULT True,
-    "created_at" TIMESTAMPTZ NOT NULL  DEFAULT CURRENT_TIMESTAMP,
-    "modified_at" TIMESTAMPTZ NOT NULL  DEFAULT CURRENT_TIMESTAMP
+    "created_at" TIMESTAMPTZ NOT NULL  DEFAULT CURRENT_TIMESTAMP
 );
 CREATE INDEX IF NOT EXISTS "idx_users_email_133a6f" ON "users" ("email");
 CREATE INDEX IF NOT EXISTS "idx_users_usernam_266d85" ON "users" ("username");

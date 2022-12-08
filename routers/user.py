@@ -9,7 +9,7 @@
 #
 # from utils.todo_exceptions import get_user_exception
 #
-# from database_pack.schemas import UserVerification
+# from db.schemas import UserVerification
 #
 #
 # from fastapi import APIRouter, Depends

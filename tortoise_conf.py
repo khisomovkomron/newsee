@@ -1,4 +1,4 @@
-from settings import APPS_MODELS
+from config.settings import APPS_MODELS
 
 TORTOISE_ORM = {
     "connections": {"default": 'postgres://postgres:123abcDEF@localhost/NewseeDatabase'},
