@@ -29,15 +29,16 @@ async def read_all():
     logger.info("READING ALL USERS")
     return await schemas.user_get_pydantic.from_queryset(models.Users.all())
 
-# @router.get('/user/{user_id}')
-# async def user_by_path(user_id: int, db: Session = Depends(get_db)):
-#     user_model = db.query(models.Users).filter(models.Users.id == user_id).first()
-#
-#     logger.info("READING USER BY BY PATH")
-#
-#     if user_model is not None:
-#         return user_model
-#     return 'Invalid used_id'
+
+@router.get('/user/{user_id}')
+async def user_by_path(user_id: int):
+    logger.info("READING USER BY BY PATH")
+
+    user_model = await schemas.user_get_pydantic.from_queryset_single(models.Users.get(id=user_id))
+
+    if user_model is not None:
+        return user_model
+    return 'Invalid used_id'
 #
 #
 # @router.get('/user/')
