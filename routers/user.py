@@ -39,17 +39,16 @@ async def user_by_path(user_id: int):
     if user_model is not None:
         return user_model
     return 'Invalid used_id'
-#
-#
-# @router.get('/user/')
-# async def user_by_query(user_id: int, db: Session = Depends(get_db)):
-#     user_model = db.query(models.Users).filter(models.Users.id == user_id).first()
-#
-#     logger.info("READING USER BY ID BY QUERY")
-#
-#     if user_model is not None:
-#         return user_model
-#     return 'Invalid user_id'
+
+
+@router.get('/user/')
+async def user_by_query(user_id: int):
+    logger.info("READING USER BY ID BY QUERY")
+    user_model = await schemas.user_get_pydantic.from_queryset_single(models.Users.get(id=user_id))
+
+    if user_model is not None:
+        return user_model
+    return 'Invalid user_id'
 #
 #
 # @router.put('/user/password')
