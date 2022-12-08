@@ -16,7 +16,6 @@ from logs.loguru import fastapi_logs
 from db.schemas import CreateUser
 from db import models, schemas
 from utils.auth_helpers import authenticate_user
-from tortoise.contrib.pydantic import pydantic_model_creator
 from tortoise.expressions import Q
 from utils.auth_helpers import get_hashed_password
 logger = fastapi_logs(router='AUTH')
@@ -30,7 +29,7 @@ router = APIRouter(
 # User_Pydantic = pydantic_model_creator(models.Users)
 
 
-@router.post('/create/user')
+@router.post('/create')
 async def create_new_user(create_user: CreateUser):
     """Create new user: get user model from DB and pass all variables from CreateUser fields to db fields"""
     
@@ -51,6 +50,6 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     user = await authenticate_user(username=form_data.username, password=form_data.password)
     if not user:
         raise get_user_exception()
-    return create_access_token(form_data.username, user.id)
+    return {"token": create_access_token(form_data.username, user.id)}
 
 
