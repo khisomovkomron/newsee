@@ -25,6 +25,6 @@ register_tortoise(
     app,
     db_url="postgres://postgres:123abcDEF@localhost/NewseeDatabase",
     modules={'modules': settings.APPS_MODELS},
-    generate_schemas=True,
+    generate_schemas=False,
     add_exception_handlers=True
 )

@@ -1,9 +1,7 @@
 from tortoise import models
 from tortoise import fields
-from tortoise.contrib.pydantic import pydantic_model_creator
-from tortoise import Tortoise
-from tortoise.contrib.fastapi import register_tortoise
-from config import settings
+
+
 class Users(models.Model):
     
     id = fields.IntField(pk=True)
@@ -20,6 +18,6 @@ class Users(models.Model):
         return self.username
     
     class Meta:
-        ordering = ["name"]
+        ordering = ["username"]
 
 

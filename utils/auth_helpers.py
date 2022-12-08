@@ -2,31 +2,19 @@ from datetime import timedelta, datetime
 from typing import Optional
 
 from fastapi import Depends
-from fastapi import BackgroundTasks
 from fastapi.security import OAuth2PasswordBearer
 from jose import jwt, JWTError
 from passlib.context import CryptContext
 
-from db import \
-    models, schemas
-from utils import service
+from db import models
 from utils.todo_exceptions import get_user_exception
 from logs.loguru import fastapi_logs
-from tortoise.expressions import Q
 from config import settings
 
 logger = fastapi_logs(router='AUTH')
 
 bcrypt_context = CryptContext(schemes=['bcrypt'], deprecated=['auto'])
 oauth2_bearer = OAuth2PasswordBearer(tokenUrl='token', description='Bearer Token')
-
-
-async def registration(create_user: schemas.CreateUser):
-    if models.Users.filter(Q(username=create_user.username) | Q(email=create_user.email)).exists():
-        return get_user_exception()
-    else:
-        await service.user_s.create_user(create_user)
-        return True
     
 
 def get_hashed_password(password):
@@ -39,15 +27,13 @@ def verify_password(plain_password, hashed_password):
     return bcrypt_context.verify(plain_password, hashed_password)
 
 
-def authenticate_user(username: str, password: str):
+async def authenticate_user(username: str, password: str) -> Optional[models.Users]:
     """returns users if username exists in db and users is verified via password"""
-    # user = db.query(models.Users).filter(models.Users.username == username).first()
-    user = models.Users.get(username=username)
+    user = await models.Users.get(username=username)
     if not user:
-        return False
+        return None
     if not verify_password(password, user.hashed_password):
-        return False
-    
+        return None
     return user
 
 

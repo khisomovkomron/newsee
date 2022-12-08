@@ -2,8 +2,7 @@ import sys
 sys.path.append('..')
 
 from utils.auth_helpers import \
-    create_access_token, \
-    registration
+    create_access_token
 
 from utils.todo_exceptions import \
     get_user_exception, \
@@ -11,11 +10,11 @@ from utils.todo_exceptions import \
 
 
 from fastapi.security import OAuth2PasswordRequestForm
-from fastapi import Depends, APIRouter, BackgroundTasks
+from fastapi import Depends, APIRouter
 from logs.loguru import fastapi_logs
 
 from db.schemas import CreateUser
-from db import models
+from db import models, schemas
 from utils.auth_helpers import authenticate_user
 from tortoise.contrib.pydantic import pydantic_model_creator
 from tortoise.expressions import Q
@@ -28,7 +27,7 @@ router = APIRouter(
     tags=['auth'],
     responses={401: {'users': 'Not authorized'}}
 )
-User_Pydantic = pydantic_model_creator(models.Users)
+# User_Pydantic = pydantic_model_creator(models.Users)
 
 
 @router.post('/create/user')
@@ -39,7 +38,7 @@ async def create_new_user(create_user: CreateUser):
         return user_exception()
     hash_password = get_hashed_password(create_user.dict().pop("password"))
     users = await models.Users.create(**create_user.dict(exclude={"password"}), hashed_password=hash_password)
-    user = await User_Pydantic.from_tortoise_orm(users)
+    user = await schemas.user_create_pydantic.from_tortoise_orm(users)
 
     if not user:
         return False
