@@ -46,7 +46,6 @@ async def user_by_path(user_id: int):
 async def user_by_query(user_id: int):
     logger.info("READING USER BY ID BY QUERY")
     user_model = await schemas.user_get_pydantic.from_queryset_single(models.Users.get(id=user_id))
-    
     if user_model is not None:
         return user_model
     return 'Invalid user_id'
@@ -74,26 +73,20 @@ async def user_password_change(verify: UserVerification,
                 'detail': 'Invalid request'}
         
 
-# @router.delete('/user/{user_id}')
-# async def delete_user_by_id(user_id: int,
-#                             db: Session = Depends(get_db)):
-#     """Delete user by id unauthenticated"""
-#     logger.info("DELETE USER BY ID")
-#
-#     user_model = db.query(models.Users).filter(models.Users.id == user_id).first()
-#
-#     if user_model is None:
-#         return {'status': 'Failed',
-#                 'detail': 'Invalid request'}
-#
-#     db.query(models.Users).filter(models.Users.id == user_id).delete()
-#
-#     db.commit()
-#
-#     return {'status': 'Successful',
-#             'detail': f"User {user_id} was successfully deleted without authentication"}
-#
-#
+@router.delete('/user/{user_id}')
+async def delete_user_by_id(user_id: int):
+    
+    """Delete user by id unauthenticated"""
+    # if user is None:
+    #     raise get_user_exception()
+    logger.info("DELETE USER BY ID")
+    
+    await models.Users.filter(id=user_id).delete()
+    
+    return {'status': 'Successful',
+            'detail': f"User {user_id} was successfully deleted without authentication"}
+
+
 # @router.delete('/user')
 # async def delete_user(user: dict = Depends(get_current_user),
 #                       db: Session = Depends(get_db)):
