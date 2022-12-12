@@ -1,10 +1,10 @@
 import sys
-sys.path.append('..')
 
+sys.path.append('..')
 
 from utils.auth_helpers import \
     get_hashed_password, \
-    verify_password,\
+    verify_password, \
     get_current_user
 
 from utils.todo_exceptions import get_user_exception
@@ -12,7 +12,7 @@ from utils.todo_exceptions import get_user_exception
 from db import models, schemas
 
 from typing import List
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Body
 from logs.loguru import fastapi_logs
 
 logger = fastapi_logs(router='USERS')
@@ -33,9 +33,9 @@ async def read_all():
 @router.get('/{user_id}')
 async def user_by_path(user_id: int):
     logger.info("READING USER BY BY PATH")
-
+    
     user_model = await schemas.user_get_pydantic.from_queryset_single(models.Users.get(id=user_id))
-
+    
     if user_model is not None:
         return user_model
     return 'Invalid used_id'
@@ -45,37 +45,33 @@ async def user_by_path(user_id: int):
 async def user_by_query(user_id: int):
     logger.info("READING USER BY ID BY QUERY")
     user_model = await schemas.user_get_pydantic.from_queryset_single(models.Users.get(id=user_id))
-
+    
     if user_model is not None:
         return user_model
     return 'Invalid user_id'
 
 
-@router.put('/password')
-async def user_password_change(user_verification: schemas.UserVerification,
+@router.put('/reset-password/')
+async def user_password_change(new_password: str = Body(...),
                                user: dict = Depends(get_current_user)):
     """Change password authenticated"""
-
+    
     if user is None:
         raise get_user_exception()
-    user_model = await schemas.user_get_pydantic.from_queryset_single(models.Users.get(id=user.get('id')))
+    hashed_password = get_hashed_password(new_password)
+
+    try:
+        await models.Users.filter(id=user.get("id")).update(hashed_password=hashed_password)
+        await schemas.user_get_pydantic.from_queryset_single(models.Users.get(id=user.get('id')))
     
-    logger.info("CHANGING USER PASSWORD")
-
-    if user_model is not None:
-        if user_verification.username == user_model.username and verify_password(
-                user_verification.password,
-                user_model.hashed_password):
-            
-            hashed_password = get_hashed_password(user_verification.new_password)
-            obj = models.Users()
-            obj.hashed_password = hashed_password
-            await obj.save()
-            return {'status': 'Successful',
-                    'detail': 'Your password was successfully changed'}
-    return {'status': 'Failed',
-            'detail': 'Invalid request'}
-
+        logger.info("CHANGING USER PASSWORD")
+        
+        return {'status': 'Successful',
+                'detail': 'Your password was successfully changed'}
+    except:
+        return {'status': 'Failed',
+                'detail': 'Invalid request'}
+        
 
 # @router.delete('/user/{user_id}')
 # async def delete_user_by_id(user_id: int,
