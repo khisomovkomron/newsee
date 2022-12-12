@@ -10,6 +10,7 @@ from utils.auth_helpers import \
 from utils.todo_exceptions import get_user_exception
 
 from db import models, schemas
+from db.schemas import UserVerification
 
 from typing import List
 from fastapi import APIRouter, Depends, Body
@@ -52,13 +53,13 @@ async def user_by_query(user_id: int):
 
 
 @router.put('/reset-password/')
-async def user_password_change(new_password: str = Body(...),
+async def user_password_change(verify: UserVerification,
                                user: dict = Depends(get_current_user)):
     """Change password authenticated"""
     
     if user is None:
         raise get_user_exception()
-    hashed_password = get_hashed_password(new_password)
+    hashed_password = get_hashed_password(verify.new_password)
 
     try:
         await models.Users.filter(id=user.get("id")).update(hashed_password=hashed_password)
