@@ -15,6 +15,7 @@ from logs.loguru import fastapi_logs
 
 from db.schemas import CreateUser
 from db import models, schemas
+from db.schemas import user_get_pydantic
 from utils.auth_helpers import authenticate_user
 from tortoise.expressions import Q
 from utils.auth_helpers import get_hashed_password
@@ -50,6 +51,10 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     user = await authenticate_user(username=form_data.username, password=form_data.password)
     if not user:
         raise get_user_exception()
-    return {"token": create_access_token(form_data.username, user.id)}
+    
+    return {"id": user.id,
+            "username": user.username,
+            "token": create_access_token(form_data.username, user.id)}
+
 
 

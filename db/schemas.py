@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Optional
 
 from pydantic import BaseModel
@@ -10,9 +11,11 @@ class UserBase(BaseModel):
     username: str
     email: Optional[str]
     first_name: str
-    last_name: str
-    password: str
+    last_name: str | None = None
 
+    class Config:
+        orm_mode = False
+    
 
 class CreateUser(UserBase):
     phone_number: Optional[str] | None = None
@@ -23,6 +26,8 @@ class CreateUser(UserBase):
         
 class UserPublic(UserBase):
     id: int
+    is_active: bool
+    created_at: datetime
     
     class Config:
         orm_mode = True
@@ -32,6 +37,7 @@ class UserVerification(BaseModel):
     username: str
     password: str
     new_password: str
+
 
 user_create_pydantic = pydantic_model_creator(Users)
 user_get_pydantic = pydantic_model_creator(Users, name='user')

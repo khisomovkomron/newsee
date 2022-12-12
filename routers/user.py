@@ -1,4 +1,5 @@
 import sys
+from typing import List
 
 sys.path.append('..')
 
@@ -10,9 +11,8 @@ from utils.auth_helpers import \
 from utils.todo_exceptions import get_user_exception
 
 from db import models, schemas
-from db.schemas import UserVerification
+from db.schemas import UserVerification, UserBase, UserPublic
 
-from typing import List
 from fastapi import APIRouter, Depends, Body
 from logs.loguru import fastapi_logs
 
@@ -25,13 +25,13 @@ router = APIRouter(
 )
 
 
-@router.get('/all')
+@router.get('/all', response_model=List[UserPublic])
 async def read_all():
     logger.info("READING ALL USERS")
-    return await schemas.user_get_pydantic.from_queryset(models.Users.all())
+    return await schemas.user_get_pydantic.from_queryset(models.Users.all().order_by('id'))
 
 
-@router.get('/{user_id}')
+@router.get('/{user_id}', response_model=UserPublic)
 async def user_by_path(user_id: int):
     logger.info("READING USER BY BY PATH")
     
@@ -42,7 +42,7 @@ async def user_by_path(user_id: int):
     return 'Invalid used_id'
 
 
-@router.get('/')
+@router.get('/', response_model=UserPublic)
 async def user_by_query(user_id: int):
     logger.info("READING USER BY ID BY QUERY")
     user_model = await schemas.user_get_pydantic.from_queryset_single(models.Users.get(id=user_id))
