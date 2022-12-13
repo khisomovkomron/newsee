@@ -8,6 +8,7 @@ from passlib.context import CryptContext
 
 from db import models
 from utils.todo_exceptions import get_user_exception
+from utils.base_service import user_service
 from logs.loguru import fastapi_logs
 from config import settings
 
@@ -29,7 +30,7 @@ def verify_password(plain_password, hashed_password):
 
 async def authenticate_user(username: str, password: str) -> Optional[models.Users]:
     """returns users if username exists in db and users is verified via password"""
-    user = await models.Users.get(username=username)
+    user = await user_service.get_obj(username=username)
     if not user:
         return None
     if not verify_password(password, user.hashed_password):

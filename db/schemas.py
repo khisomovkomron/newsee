@@ -12,22 +12,30 @@ class UserBase(BaseModel):
     email: Optional[str]
     first_name: str
     last_name: str | None = None
+    phone_number: Optional[int] | None = None
+    is_active: Optional[bool] = True
+    created_at: Optional[datetime] = datetime
 
     class Config:
-        orm_mode = False
+        orm_mode = True
     
 
 class CreateUser(UserBase):
-    phone_number: Optional[str] | None = None
+    password: str
     
     class Config:
         orm_mode = True
         
         
-class UserPublic(UserBase):
+class UserPublic(BaseModel):
+    username: str
+    email: Optional[str]
+    first_name: str
+    last_name: str | None = None
+    phone_number: Optional[int] | None = None
+    is_active: Optional[bool] = True
+    created_at: Optional[datetime] = datetime
     id: int
-    is_active: bool
-    created_at: datetime
     
     class Config:
         orm_mode = True
