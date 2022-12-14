@@ -21,3 +21,19 @@ class Users(models.Model):
         ordering = ["username"]
 
 
+class News(models.Model):
+
+    id = fields.UUIDField(pk=True)
+    title = fields.CharField(max_length=200, null=True)
+    description = fields.TextField(null=True)
+    content = fields.TextField(null=True)
+    link_to_news = fields.TextField(null=True)
+    creator = fields.TextField(null=True)
+    language = fields.CharField(max_length=50, null=True)
+    country = fields.CharField(max_length=50, null=True)
+    category = fields.CharField(max_length=50, null=True)
+    image_url = fields.TextField(null=True)
+    datetime = fields.DatetimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ["datetime"]

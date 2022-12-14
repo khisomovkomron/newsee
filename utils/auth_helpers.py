@@ -7,7 +7,7 @@ from jose import jwt, JWTError
 from passlib.context import CryptContext
 
 from db import models
-from utils.todo_exceptions import get_user_exception
+from utils.all_exceptions import get_user_exception
 from utils.base_service import user_service
 from logs.loguru import fastapi_logs
 from config import settings
