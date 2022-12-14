@@ -4,7 +4,7 @@ sys.path.append('..')
 from utils.auth_helpers import \
     create_access_token
 
-from utils.todo_exceptions import \
+from utils.all_exceptions import \
     get_user_exception, \
     user_exception
 

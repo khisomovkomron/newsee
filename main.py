@@ -1,4 +1,4 @@
-from routers import user, auth
+from routers import user, auth, news
 from fastapi import FastAPI
 from tortoise.contrib.fastapi import register_tortoise
 from config import settings
@@ -13,6 +13,7 @@ app = FastAPI(
 
 app.include_router(router=auth.router)
 app.include_router(router=user.router)
+app.include_router(router=news.router)
 
 logger.info('    RUNNING main.py')
 

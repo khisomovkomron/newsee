@@ -8,7 +8,7 @@ from utils.auth_helpers import \
     verify_password, \
     get_current_user
 
-from utils.todo_exceptions import get_user_exception
+from utils.all_exceptions import get_user_exception
 
 from db import models, schemas
 from db.schemas import UserVerification, UserBase, UserPublic
