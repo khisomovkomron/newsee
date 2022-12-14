@@ -9,3 +9,7 @@ APPS_MODELS = [
     "db.models",
     "aerich.models",
 ]
+
+NEWSAPIKEY = '4394d565d26741159257f1fd474a7031'
+
+NEWSDATA = 'pub_14583905772b220dc2de06a8fad1d7c5fd54c'
