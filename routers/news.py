@@ -25,8 +25,8 @@ router = APIRouter(
 
 
 @router.get('/breakingnews', response_model=Page[ReadNews])
-async def get_breaking():
-    breaking_news = NewsApi().breaking_news()
+async def get_breaking(language: str = 'en', country: str = 'us'):
+    breaking_news = NewsApi().breaking_news(language=language, country=country)
     
     return paginate(breaking_news)
 
