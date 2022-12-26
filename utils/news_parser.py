@@ -32,18 +32,22 @@ class NewsApi(NewsAbstract):
     def __init__(self):
         self.newsapi = NewsApiClient(api_key='4394d565d26741159257f1fd474a7031')
         
-    def top_headlines(self, category=None, datetime=None, language='en', country=None, **kwargs):
+    def top_headlines(self, category=None, datetime=None, language='en', country=None, page_size=None, page=None):
         top_headlines = self.newsapi.get_top_headlines(category=category,
                                                        language=language,
-                                                       country=country, page_size=5, page=1)
+                                                       country=country,
+                                                       page_size=page_size,
+                                                       page=page)
         
         return top_headlines['articles']
     
-    def breaking_news(self, category=None, datetime=None, language='en', country=None, **kwargs):
+    def breaking_news(self, category=None, datetime=None, language='en', country=None, page_size=None, page=None):
         
         breaking_news = self.newsapi.get_top_headlines(category=category,
                                                        language=language,
-                                                       country=country, page_size=10, page=1)
+                                                       country=country,
+                                                       page_size=page_size,
+                                                       page=None)
         
         return breaking_news['articles']
         

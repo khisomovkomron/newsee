@@ -30,10 +30,10 @@ class CreateNews(NewsBase):
     
 class ReadNews(NewsBase):
     content: str
-    creator: str
-    category: str
-    image_url: Optional[str] | None = None
-    datetime: Optional[datetime] = datetime
+    source: dict
+    url: Optional[str] | None = None
+    urlToImage: Optional[str] | None = None
+    publishedAt: Optional[datetime] = datetime
     
     class Config:
         orm_mode = True

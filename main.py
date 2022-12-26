@@ -3,7 +3,7 @@ from fastapi import FastAPI
 from tortoise.contrib.fastapi import register_tortoise
 from config import settings
 from loguru import logger
-
+from fastapi_pagination import add_pagination
 
 app = FastAPI(
     title='NEWSEE',
@@ -11,10 +11,10 @@ app = FastAPI(
 )
 
 
+
 app.include_router(router=auth.router)
 app.include_router(router=user.router)
 app.include_router(router=news.router)
-
 logger.info('    RUNNING main.py')
 
 
