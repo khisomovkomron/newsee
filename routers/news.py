@@ -24,16 +24,18 @@ router = APIRouter(
 )
 
 
+@router.get('/hotnews', response_model=Page[ReadNews])
+async def get_hot(language: str = 'en', country: str = 'us', category: str = None):
+    hot_news = NewsApi().top_headlines(language=language, country=country, category=category, page_size=10)
+    
+    return paginate(hot_news)
+
+
 @router.get('/breakingnews', response_model=Page[ReadNews])
 async def get_breaking(language: str = 'en', country: str = 'us'):
-    breaking_news = NewsApi().breaking_news(language=language, country=country)
+    breaking_news = NewsApi().breaking_news(language=language, country=country, page_size=10)
     
     return paginate(breaking_news)
-
-
-@router.get('/hotnews')
-async def get_hot():
-    pass
 
 
 @router.get('/mainpage')
