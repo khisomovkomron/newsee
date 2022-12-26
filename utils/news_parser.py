@@ -47,7 +47,7 @@ class NewsApi(NewsAbstract):
                                                        language=language,
                                                        country=country,
                                                        page_size=page_size,
-                                                       page=None)
+                                                       page=page)
         
         return breaking_news['articles']
         

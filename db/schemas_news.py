@@ -7,8 +7,8 @@ from tortoise.contrib.pydantic import pydantic_model_creator, pydantic_queryset_
 
 class NewsBase(BaseModel):
     
-    title: str
-    description: str
+    title: Optional[str]
+    description: Optional[str]
     
     class Config:
         orm_mode = True
@@ -29,8 +29,8 @@ class CreateNews(NewsBase):
     
     
 class ReadNews(NewsBase):
-    content: str
-    source: dict
+    content: Optional[str]
+    source: Optional[dict]
     url: Optional[str] | None = None
     urlToImage: Optional[str] | None = None
     publishedAt: Optional[datetime] = datetime
