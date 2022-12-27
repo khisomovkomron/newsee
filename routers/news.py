@@ -45,8 +45,22 @@ async def get_main():
     return paginate(all_news)
     
     
-@router.get('/search_news')
-async def get_news():
-    pass
+@router.get('/search_news', response_model=Page[ReadNews])
+async def get_news(q: str | None = 'news',
+                   sources: str = None,
+                   qintitle: str = None,
+                   domains: str = None,
+                   from_param: str = '2022-11-30',
+                   to: str = '2022-12-27',
+                   language: str = 'en'):
+    search = NewsApi().all_news(q=q,
+                                sources=sources,
+                                qintitle=qintitle,
+                                domains=domains,
+                                from_param=from_param,
+                                to=to,
+                                language=language)
+    
+    return paginate(search)
 
 add_pagination(router)
