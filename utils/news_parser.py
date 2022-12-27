@@ -31,7 +31,7 @@ class NewsApi(NewsAbstract):
     
     def __init__(self):
         self.newsapi = NewsApiClient(api_key='4394d565d26741159257f1fd474a7031')
-        
+    
     def top_headlines(self, category=None, datetime=None, language='en', country=None, page_size=None, page=None):
         top_headlines = self.newsapi.get_top_headlines(category=category,
                                                        language=language,
@@ -50,15 +50,30 @@ class NewsApi(NewsAbstract):
                                                        page=page)
         
         return breaking_news['articles']
-        
-    def all_news(self, language='en', page=None, page_size=None, ):
-        news = self.newsapi.get_everything(language, page_size=100)
+    
+    def all_news(self,
+                 q='news',
+                 sources=None,
+                 qintitle=None,
+                 domains=None,
+                 from_param=None,
+                 to=None,
+                 language='en',
+                 page=1,
+                 page_size=100):
+        news = self.newsapi.get_everything(q=q,
+                                           sources=sources,
+                                           qintitle=qintitle,
+                                           domains=domains,
+                                           from_param=from_param,
+                                           to=to,
+                                           language=language,
+                                           page=page,
+                                           page_size=page_size)
         
         return news['articles']
-        
-        
 
-    
+
 if __name__ == '__main__':
     newsapi = NewsApi()
     # PrettyPrinter().pprint(newsapi.top_headlines())
