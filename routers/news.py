@@ -40,7 +40,7 @@ async def get_breaking(language: str = 'en', country: str = 'us'):
 
 @router.get('/mainpage', response_model=Page[ReadNews])
 async def get_main():
-    all_news = NewsApi().all_news()
+    all_news = NewsApi().all_news(page_size=10)
     
     return paginate(all_news)
     
@@ -59,7 +59,7 @@ async def get_news(q: str | None = 'news',
                                 domains=domains,
                                 from_param=from_param,
                                 to=to,
-                                language=language)
+                                language=language, page_size=10)
     
     return paginate(search)
 
