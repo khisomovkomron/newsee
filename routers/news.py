@@ -38,8 +38,15 @@ async def get_breaking(language: str = 'en', country: str = 'us'):
     return paginate(breaking_news)
 
 
-@router.get('/mainpage')
+@router.get('/mainpage', response_model=Page[ReadNews])
 async def get_main():
+    all_news = NewsApi().all_news()
+    
+    return paginate(all_news)
+    
+    
+@router.get('/search_news')
+async def get_news():
     pass
 
 add_pagination(router)
