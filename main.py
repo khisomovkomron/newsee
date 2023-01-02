@@ -20,7 +20,7 @@ logger.info('    RUNNING main.py')
 
 register_tortoise(
     app,
-    db_url="postgres://postgres:123abcDEF@localhost/NewseeDatabase",
+    db_url="postgres://postgres:1234@localhost/NewseeDatabase",
     modules={'modules': settings.APPS_MODELS},
     generate_schemas=False,
     add_exception_handlers=True
