@@ -1,8 +1,7 @@
 import sys
-from typing import List
-
 sys.path.append('..')
 
+from typing import List
 from fastapi_pagination import Page, paginate, add_pagination
 from fastapi import APIRouter, Depends, Body
 from utils.all_exceptions import get_user_exception

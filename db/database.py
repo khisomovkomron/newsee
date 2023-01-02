@@ -1,1 +1,1 @@
-SQLALCHEMY_DATABASE_URL = "postgresql://postgres:123abcDEF@localhost/NewseeDatabase"
+SQLALCHEMY_DATABASE_URL = "postgres://postgres:1234@localhost/NewseeDatabase"

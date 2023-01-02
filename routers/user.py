@@ -7,11 +7,13 @@ from utils.auth_helpers import \
     get_hashed_password, \
     verify_password, \
     get_current_user
-
+from fastapi_pagination import Page, paginate, add_pagination
 from utils.all_exceptions import get_user_exception
+from utils.news_parser import NewsApi
 
 from db import models, schemas
 from db.schemas import UserVerification, UserBase, UserPublic
+from db.schemas_news import ReadNews
 
 from fastapi import APIRouter, Depends, Body
 from logs.loguru import fastapi_logs
@@ -100,3 +102,18 @@ async def delete_user(user_id: int,
 
     return {'status': 'Successful',
             'detail': f"User {user_id} was successfully deleted"}
+
+
+@router.get('/hotnews/{user_id}', response_model=Page[ReadNews])
+async def get_user_hot_news(user_id: int,
+                            user: dict = Depends(get_current_user),
+                            language: str = 'en',
+                            country: str = 'us'):
+    if not user:
+        raise get_user_exception()
+
+    breaking_news = NewsApi().breaking_news(language=language, country=country, page_size=50)
+
+    return paginate(breaking_news)
+
+add_pagination(router)

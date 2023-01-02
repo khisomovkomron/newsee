@@ -1,7 +1,7 @@
 from config.settings import APPS_MODELS
 
 TORTOISE_ORM = {
-    "connections": {"default": 'postgres://postgres:123abcDEF@localhost/NewseeDatabase'},
+    "connections": {"default": 'postgres://postgres:1234@localhost/NewseeDatabase'},
     "apps": {
         "models": {
             "models": APPS_MODELS,
