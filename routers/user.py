@@ -129,4 +129,17 @@ async def get_user_breaking(user: dict= Depends(get_current_user),
     return paginate(breaking)
 
 
+@router.get('/mainpage/', response_model=Page[ReadNews])
+async def get_user_mainpage(user: dict=Depends(get_current_user),
+                            language: str = "en",
+                            country: str = 'us'):
+
+    if not user:
+        raise get_user_exception()
+
+    mainpage = NewsApi().all_news(page_size=50)
+
+    return paginate(mainpage)
+
+
 add_pagination(router)
