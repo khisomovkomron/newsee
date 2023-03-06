@@ -13,6 +13,9 @@ from db.schemas_news import news_create_pydantic, \
     CreateNews, NewsBase
 from logs.loguru import fastapi_logs
 from utils.news_parser import NewsApi
+import datetime
+
+
 
 logger = fastapi_logs(router='NEWS')
 
@@ -43,14 +46,17 @@ async def get_main():
     
     return paginate(all_news)
     
-    
+
+today = datetime.date.today()
+olddate = today.replace(day=int(1))
+
 @router.get('/search_news', response_model=Page[ReadNews])
 async def get_news(q: str | None = 'news',
                    sources: str = None,
                    qintitle: str = None,
                    domains: str = None,
-                   from_param: str = '2022-11-30',
-                   to: str = '2022-12-27',
+                   from_param: str = olddate,
+                   to: str = today,
                    language: str = 'en'):
     search = NewsApi().all_news(q=q,
                                 sources=sources,
