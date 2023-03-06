@@ -104,16 +104,29 @@ async def delete_user(user_id: int,
             'detail': f"User {user_id} was successfully deleted"}
 
 
-@router.get('/hotnews/{user_id}', response_model=Page[ReadNews])
-async def get_user_hot_news(user_id: int,
-                            user: dict = Depends(get_current_user),
+@router.get('/hotnews/', response_model=Page[ReadNews])
+async def get_user_hot_news(user: dict = Depends(get_current_user),
                             language: str = 'en',
                             country: str = 'us'):
     if not user:
         raise get_user_exception()
 
-    breaking_news = NewsApi().breaking_news(language=language, country=country, page_size=50)
+    hotnews = NewsApi().top_headlines(language=language, country=country, page_size=50)
 
-    return paginate(breaking_news)
+    return paginate(hotnews)
+
+
+@router.get('/breaking/', response_model=Page[ReadNews])
+async def get_user_breaking(user: dict= Depends(get_current_user),
+                            language: str = "en",
+                            country: str = 'us'):
+
+    if not user:
+        raise get_user_exception()
+
+    breaking = NewsApi().breaking_news(language=language, country=country, page_size=50)
+
+    return paginate(breaking)
+
 
 add_pagination(router)
