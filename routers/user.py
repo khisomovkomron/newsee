@@ -1,3 +1,4 @@
+import datetime
 import sys
 from typing import List
 
@@ -130,7 +131,7 @@ async def get_user_breaking(user: dict= Depends(get_current_user),
 
 
 @router.get('/mainpage/', response_model=Page[ReadNews])
-async def get_user_mainpage(user: dict=Depends(get_current_user),
+async def get_user_mainpage(user: dict= Depends(get_current_user),
                             language: str = "en",
                             country: str = 'us'):
 
@@ -140,6 +141,32 @@ async def get_user_mainpage(user: dict=Depends(get_current_user),
     mainpage = NewsApi().all_news(page_size=50)
 
     return paginate(mainpage)
+
+
+today = datetime.date.today()
+olddate = today.replace(day=int(1))
+
+
+@router.get("/search/", response_model=Page[ReadNews])
+async def get_user_searchjobs(user: dict = Depends(get_current_user),
+                              q: str | None = 'news',
+                              sources: str = None,
+                              qintitle: str = None,
+                              domains: str = None,
+                              from_param: str = olddate,
+                              to: str = today,
+                              language: str = 'en'):
+    if not user:
+        raise get_user_exception()
+    search = NewsApi().all_news(q=q,
+                                sources=sources,
+                                qintitle=qintitle,
+                                domains=domains,
+                                from_param=from_param,
+                                to=to,
+                                language=language, page_size=50)
+
+    return paginate(search)
 
 
 add_pagination(router)
