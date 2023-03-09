@@ -35,7 +35,7 @@ async def get_user_hot_news(user: dict = Depends(get_current_user),
 
 
 @router.get('/breaking/', response_model=Page[ReadNews])
-async def get_user_breaking(user: dict= Depends(get_current_user),
+async def get_user_breaking(user: dict = Depends(get_current_user),
                             language: str = "en",
                             country: str = 'us'):
 

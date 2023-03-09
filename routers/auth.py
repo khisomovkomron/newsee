@@ -8,18 +8,15 @@ from utils.all_exceptions import \
     get_user_exception, \
     user_exception
 
-
 from fastapi.security import OAuth2PasswordRequestForm
-from fastapi import Depends, APIRouter
+from fastapi import Depends, APIRouter, Header, Response
 from logs.loguru import fastapi_logs
 
 from db.schemas import CreateUser, UserPublic
-from db import models, schemas
-from db.schemas import user_get_pydantic
+from db import models
 from utils.auth_helpers import authenticate_user
 from tortoise.expressions import Q
 from utils.auth_helpers import get_hashed_password
-from utils import base_service
 
 logger = fastapi_logs(router='AUTH')
 
@@ -29,7 +26,6 @@ router = APIRouter(
     tags=['auth'],
     responses={401: {'users': 'Not authorized'}}
 )
-# User_Pydantic = pydantic_model_creator(models.Users)
 
 
 @router.post('/create', response_model=UserPublic, response_model_exclude_defaults=True)
@@ -40,7 +36,6 @@ async def create_new_user(create_user: CreateUser):
 
     hash_password = get_hashed_password(create_user.dict().pop("password"))
     user = await models.Users.create(**create_user.dict(exclude={"password"}), hashed_password=hash_password)
-    # user = await schemas.user_create_pydantic.from_tortoise_orm(users)
 
     if not user:
         return False
@@ -48,9 +43,11 @@ async def create_new_user(create_user: CreateUser):
 
     
 @router.post('/token')
-async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
-
+async def login_for_access_token(response: Response, form_data: OAuth2PasswordRequestForm = Depends()):
     user = await authenticate_user(username=form_data.username, password=form_data.password)
+
+    response.headers['Token'] = create_access_token(form_data.username, user.id)
+
     if not user:
         raise get_user_exception()
     
@@ -59,4 +56,15 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
             "token": create_access_token(form_data.username, user.id)}
 
 
+@router.get('/header')
+async def get_header(response: Response, header: str | None = Header(default=None)):
+
+    response.headers['NEW_HEADER'] = "Header"
+
+    if header is not None:
+        return {'HEADER': header}
+    else:
+        return {
+            'HEADER': 'incorrect Header'
+        }
 
