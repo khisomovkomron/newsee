@@ -1,5 +1,7 @@
 import datetime
 import sys
+from enum import Enum
+from typing import List
 
 sys.path.append('..')
 
@@ -10,7 +12,7 @@ from utils.news_parser import NewsApi
 
 from db.schemas_news import ReadNews
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 from logs.loguru import fastapi_logs
 
 logger = fastapi_logs(router='USER_NEWS')
@@ -87,5 +89,28 @@ async def get_user_search(user: dict = Depends(get_current_user),
 
     return paginate(search)
 
+
+class MyCategory(str, Enum):
+    cat_1 = 'business'
+    cat_2 = 'entertainment'
+    cat_3 = 'general'
+    cat_4 = 'health'
+    cat_5 = 'science'
+    cat_6 = 'sports'
+    cat_7 = 'technology'
+
+
+@router.get('/news_by_category', response_model=Page[ReadNews])
+async def news_by_category(signleSelectionDropdown: MyCategory,
+                           language: str = 'en',
+                           country: str = 'us'):
+    singleDropdownValue = signleSelectionDropdown.value
+
+    newsByCategory = NewsApi().top_headlines(category=singleDropdownValue,
+                                             language=language,
+                                             country=country,
+                                             page_size=50)
+
+    return paginate(newsByCategory)
 
 add_pagination(router)

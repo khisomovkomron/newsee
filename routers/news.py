@@ -1,20 +1,16 @@
 import sys
+from enum import Enum
+
 sys.path.append('..')
 
-from typing import List
 from fastapi_pagination import Page, paginate, add_pagination
-from fastapi import APIRouter, Depends, Body
-from utils.all_exceptions import get_user_exception
+from fastapi import APIRouter
 
-from db import models, schemas_news
-from db.schemas_news import news_create_pydantic, \
-    news_read_pydantic, \
-    ReadNews, \
-    CreateNews, NewsBase
+from db.schemas_news import ReadNews
+
 from logs.loguru import fastapi_logs
 from utils.news_parser import NewsApi
 import datetime
-
 
 
 logger = fastapi_logs(router='NEWS')
@@ -50,6 +46,7 @@ async def get_main():
 today = datetime.date.today()
 olddate = today.replace(day=int(1))
 
+
 @router.get('/search_news', response_model=Page[ReadNews])
 async def get_news(q: str | None = 'news',
                    sources: str = None,
@@ -67,5 +64,29 @@ async def get_news(q: str | None = 'news',
                                 language=language, page_size=5)
     
     return paginate(search)
+
+
+class MyCategory(str, Enum):
+    cat_1 = 'business'
+    cat_2 = 'entertainment'
+    cat_3 = 'general'
+    cat_4 = 'health'
+    cat_5 = 'science'
+    cat_6 = 'sports'
+    cat_7 = 'technology'
+
+
+@router.get('/news_by_category', response_model=Page[ReadNews])
+async def news_by_category(singleSelectionDropdown: MyCategory,
+                           language: str = 'en',
+                           country: str = 'us'):
+    singleDropdownValue = singleSelectionDropdown.value
+
+    newsByCategory = NewsApi().top_headlines(category=singleDropdownValue,
+                                             language=language,
+                                             country=country,
+                                             page_size=5)
+
+    return paginate(newsByCategory)
 
 add_pagination(router)
