@@ -29,10 +29,10 @@ class Crypto:
 
         try:
             response = requests.get(url=_url, params=self.parameters, headers=self.headers)
-            print(response.json())
+            print(response.json()['data'])
         except (ConnectionError, Timeout, TooManyRedirects) as e:
             print(e)
-        return response.json()
+        return response.json()['data']
 
     def fiat_map(self):
 
@@ -41,11 +41,11 @@ class Crypto:
 
         try:
             response = requests.get(url=_url, params=self.parameters, headers=self.headers)
-            print(response.json())
+            print(response.json()['data'])
         except (ConnectionError, Timeout, TooManyRedirects) as e:
             print(e)
 
-        return response.json()
+        return response.json()['data']
 
 
 # get top 10 crypto prices
@@ -55,5 +55,5 @@ class Crypto:
 if __name__ == "__main__":
 
     crypto = Crypto(sort='id')
-    # crypto.crypto_currency_map()
+    crypto.crypto_currency_map()
     crypto.fiat_map()
