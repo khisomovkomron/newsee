@@ -1,8 +1,7 @@
 import requests
 from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
 
-
-URL =  "https://pro-api.coinmarketcap.com"
+URL = "https://pro-api.coinmarketcap.com"
 API_kEY = '5e4d440d-3c6e-47d0-9670-668ede220abb'
 
 
@@ -48,12 +47,22 @@ class Crypto:
         return response.json()['data']
 
 
+# class CryptoCurrency(StockParser):
+#
+#     def old(self):
+#         pass
+
 # get top 10 crypto prices
 # get top changes in 24 hours
-#
+
 
 if __name__ == "__main__":
 
     crypto = Crypto(sort='id')
     crypto.crypto_currency_map()
     crypto.fiat_map()
+
+    # crypto_currency = CryptoCurrency(function="CURRENCY_EXCHANGE_RATE",
+    #                                  from_currency="BTC",
+    #                                  to_currency="USD")
+    # print(crypto_currency.general_request())

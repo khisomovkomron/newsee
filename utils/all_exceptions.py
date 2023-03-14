@@ -10,7 +10,7 @@ def get_user_exception():
     """ returns HTTP exception if users credentials are wrong"""
     credential_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
-        detail='Coul not validate credentials',
+        detail='Could not validate credentials',
         headers={'WWW-Authenticate': 'Bearer'}
     )
     logger.critical(credential_exception)
