@@ -42,12 +42,12 @@ if __name__ == "__main__":
     quote = StockParser(function="GLOBAL_QUOTE", symbol="AAPL")
     quote.general_request()
 
-    intra_day = StockParser(function="TIME_SERIES_INTRADAY", symbol="AAPL", interval='60min', outputsize="compact")
-    intra_day.general_request()
-
-    # weekly = StockParser(function="TIME_SERIES_WEEKLY", symbol="AAPL")
-    # weekly.general_request()
-
-    company_overview = StockParser(function="OVERVIEW", symbol="AAPL")
-    company_overview.general_request()
+    # intra_day = StockParser(function="TIME_SERIES_INTRADAY", symbol="AAPL", interval='60min', outputsize="compact")
+    # intra_day.general_request()
+    #
+    # # weekly = StockParser(function="TIME_SERIES_WEEKLY", symbol="AAPL")
+    # # weekly.general_request()
+    #
+    # company_overview = StockParser(function="OVERVIEW", symbol="AAPL")
+    # company_overview.general_request()
 

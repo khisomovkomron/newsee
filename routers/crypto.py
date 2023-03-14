@@ -32,10 +32,13 @@ async def get_fiat(start: int = 1, limit: int = 10, sort: str = 'id'):
 @router.get('/exchange_rate')
 async def get_exchange_rate(from_currency: str = "BTC",
                             to_currency: str = 'USD'):
+
     crypto_currency = StockParser(function="CURRENCY_EXCHANGE_RATE",
-                                     from_currency=from_currency,
-                                     to_currency=to_currency)
+                                  from_currency=from_currency,
+                                  to_currency=to_currency)
+
     exchange_rate = crypto_currency.general_request()['Realtime Currency Exchange Rate']['5. Exchange Rate']
+
     if not exchange_rate:
         return HTTPException(status_code=400, detail='Incorrect exchange rate')
     return {f'1 {from_currency}': f"{exchange_rate} {to_currency}"}
