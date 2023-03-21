@@ -7,7 +7,7 @@ from fastapi_pagination import Page, paginate, add_pagination
 from fastapi import APIRouter
 
 from db.schemas_news import ReadNews
-
+from db.models import News
 from logs.loguru import fastapi_logs
 from utils.news_parser import NewsApi
 import datetime
@@ -62,7 +62,15 @@ async def get_news(q: str | None = 'news',
                                 from_param=from_param,
                                 to=to,
                                 language=language, page_size=5)
-    
+    # print(search[0]['title'])
+    for search_item in search:
+        await News.create(title=search_item['title'],
+                          description=search_item['description'],
+                          link_to_news=search_item['url'],
+                          image_url=search_item['urlToImage'],
+                          content=search_item['content'],
+                          creator=search_item['source']['name'])
+
     return paginate(search)
 
 

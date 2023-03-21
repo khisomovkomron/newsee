@@ -11,7 +11,7 @@ from utils.all_exceptions import get_user_exception
 from utils.news_parser import NewsApi
 
 from db.schemas_news import ReadNews
-
+from db.models import News
 from fastapi import APIRouter, Depends, Query
 from logs.loguru import fastapi_logs
 
@@ -86,6 +86,8 @@ async def get_user_search(user: dict = Depends(get_current_user),
                                 to=to,
                                 language=language,
                                 page_size=50)
+
+
 
     return paginate(search)
 
