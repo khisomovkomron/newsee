@@ -86,7 +86,14 @@ async def get_user_search(user: dict = Depends(get_current_user),
                                 to=to,
                                 language=language,
                                 page_size=50)
-
+    for search_item in search:
+        await News.create(title=search_item['title'],
+                          description=search_item['description'],
+                          link_to_news=search_item['url'],
+                          image_url=search_item['urlToImage'],
+                          content=search_item['content'],
+                          creator=search_item['source']['name'],
+                          language=language)
 
 
     return paginate(search)

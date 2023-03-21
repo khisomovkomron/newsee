@@ -69,7 +69,8 @@ async def get_news(q: str | None = 'news',
                           link_to_news=search_item['url'],
                           image_url=search_item['urlToImage'],
                           content=search_item['content'],
-                          creator=search_item['source']['name'])
+                          creator=search_item['source']['name'],
+                          language=language)
 
     return paginate(search)
 
