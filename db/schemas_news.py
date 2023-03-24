@@ -6,7 +6,7 @@ from tortoise.contrib.pydantic import pydantic_model_creator, pydantic_queryset_
 
 
 class NewsBase(BaseModel):
-    
+
     title: Optional[str]
     description: Optional[str]
     
@@ -37,7 +37,22 @@ class ReadNews(NewsBase):
     
     class Config:
         orm_mode = True
-        
-    
+
+
+class FavoriteNews(NewsBase):
+    # id: Optional[str]
+    content: Optional[str]
+    link_to_news: Optional[str]
+    creator: Optional[str]
+    language: Optional[str]
+    image_url: Optional[str]
+    # user = int
+
+    class Config:
+        orm_mode = True
+        arbitrary_types_allowed = True
+
+
 news_create_pydantic = pydantic_model_creator(News, name='create_news')
 news_read_pydantic = pydantic_queryset_creator(News, name='read_news')
+news_favorite_pydantic = pydantic_queryset_creator(News, name='favorite_news')

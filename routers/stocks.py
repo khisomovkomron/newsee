@@ -38,7 +38,7 @@ async def get_intraday_prices(ticker: str = "AAPL",
 
     intraday_prices = intraday.general_request()
 
-    return intraday_prices@router.get('/intraday_prices')
+    return intraday_prices
 
 
 @router.get('/weekly_prices')

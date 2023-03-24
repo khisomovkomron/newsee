@@ -50,6 +50,7 @@ class UserNews(models.Model):
     language = fields.CharField(max_length=50, null=True)
     creator = fields.TextField(null=True)
     user = fields.ForeignKeyField(model_name='models.Users', related_name='user_news')
+    user_comment = fields.TextField(null=True)
 
     class Meta:
         ordering = ["id"]

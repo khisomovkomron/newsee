@@ -26,7 +26,6 @@ class StockParser:
         try:
             response = requests.get(url=URL, params=self.params)
             rs_json = response.json()
-            print(rs_json)
         except (ConnectionError, Timeout, TooManyRedirects) as e:
             print(e)
 

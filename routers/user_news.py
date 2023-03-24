@@ -122,4 +122,5 @@ async def news_by_category(signleSelectionDropdown: MyCategory,
 
     return paginate(newsByCategory)
 
+
 add_pagination(router)
