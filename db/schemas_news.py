@@ -52,6 +52,13 @@ class FavoriteNews(NewsBase):
         orm_mode = True
         arbitrary_types_allowed = True
 
+class UpdateComment(BaseModel):
+
+    user_comment: str
+
+    class Meta:
+        orm_mode = True
+
 
 news_create_pydantic = pydantic_model_creator(News, name='create_news')
 news_read_pydantic = pydantic_queryset_creator(News, name='read_news')

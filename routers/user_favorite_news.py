@@ -10,7 +10,7 @@ from fastapi_pagination import Page, paginate, add_pagination
 from utils.all_exceptions import get_user_exception
 from utils.news_parser import NewsApi
 
-from db.schemas_news import FavoriteNews, NewsBase
+from db.schemas_news import FavoriteNews, NewsBase, UpdateComment
 from db.models import News, UserNews, Users
 from fastapi import APIRouter, Depends, Query
 from logs.loguru import fastapi_logs
@@ -33,6 +33,14 @@ async def get_all_news():
     return news
 
 
+@router.get("/")
+async def get_favorite_news(user: dict = Depends(get_current_user)):
+
+    all_news = await UserNews.all()
+
+    return all_news
+
+
 @router.post('/{news_id}')
 async def create_favorite_news(news_id: str,
                                user: dict = Depends(get_current_user)):
@@ -51,4 +59,21 @@ async def create_favorite_news(news_id: str,
                                                user_id=user.get('id'))
     await user_favorite_news.save()
     return user_favorite_news
+
+
+@router.patch('/add_comment/{news_id}')
+async def add_comment_to_news(news_id: str,
+                              comment: UpdateComment,
+                              user: dict = Depends(get_current_user)):
+
+    if not user:
+        raise get_user_exception()
+
+    await UserNews.filter(id=news_id).update(user_comment=comment)
+
+    news = await UserNews.get(id=news_id)
+
+    return news
+
+
 
