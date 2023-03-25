@@ -12,7 +12,7 @@ from utils.news_parser import NewsApi
 
 from db.schemas_news import FavoriteNews, NewsBase, UpdateComment
 from db.models import News, UserNews, Users
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, status
 from logs.loguru import fastapi_logs
 
 logger = fastapi_logs(router='USER_FAVORITE_NEWS')
@@ -26,7 +26,6 @@ router = APIRouter(
 
 @router.get('/get_news')
 async def get_all_news():
-
     news = await News.all()
     if not news:
         return "Invalid request"
@@ -35,6 +34,8 @@ async def get_all_news():
 
 @router.get("/")
 async def get_favorite_news(user: dict = Depends(get_current_user)):
+    if not user:
+        raise get_user_exception()
 
     all_news = await UserNews.all()
 
@@ -65,7 +66,6 @@ async def create_favorite_news(news_id: str,
 async def add_comment_to_news(news_id: str,
                               comment: UpdateComment,
                               user: dict = Depends(get_current_user)):
-
     if not user:
         raise get_user_exception()
 
@@ -76,4 +76,20 @@ async def add_comment_to_news(news_id: str,
     return news
 
 
+@router.delete("/{news_id}", status_code=status.HTTP_200_OK)
+async def delete_favorite_news(news_id: str, user: dict = Depends(get_current_user)):
+    if not user:
+        raise get_user_exception()
 
+    favorite_news = await UserNews.filter(id=news_id)
+
+    if not favorite_news:
+        return {"Message": f"Favorite news with id {news_id} not found", }
+
+    try:
+        await UserNews.filter(id=news_id).delete()
+    except:
+        return {"Error": 'Invalid Favorite news ID'}
+
+    return {"Status": "OK",
+            "Message": f"Favorite news with id {news_id} was deleted", }
