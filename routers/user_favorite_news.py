@@ -12,7 +12,7 @@ from utils.news_parser import NewsApi
 
 from db.schemas_news import FavoriteNews, NewsBase, UpdateComment
 from db.models import News, UserNews, Users
-from fastapi import APIRouter, Depends, Query, status
+from fastapi import APIRouter, Depends, Query, status, Request
 from logs.loguru import fastapi_logs
 
 logger = fastapi_logs(router='USER_FAVORITE_NEWS')
@@ -37,10 +37,20 @@ async def get_favorite_news(user: dict = Depends(get_current_user)):
     if not user:
         raise get_user_exception()
 
-    all_news = await UserNews.all()
+    all_news = await UserNews.filter(user_id=user.get('id')).all()
 
     return all_news
 
+
+@router.get('/{news_id}')
+async def get_favorite_news(news_id: str,
+                            user: dict = Depends(get_current_user)):
+    if not user:
+        raise get_user_exception()
+
+    news = await UserNews.filter(id=news_id).filter(user_id=user.get('id')).first()
+
+    return news
 
 @router.post('/{news_id}')
 async def create_favorite_news(news_id: str,
@@ -93,3 +103,18 @@ async def delete_favorite_news(news_id: str, user: dict = Depends(get_current_us
 
     return {"Status": "OK",
             "Message": f"Favorite news with id {news_id} was deleted", }
+
+@router.get('/share_favorite_news/{news_id}')
+async def share_favorite_news(news_id: str,
+                              request: Request,
+                              user: dict = Depends(get_current_user)):
+    if not user:
+        raise get_user_exception()
+
+    news = await UserNews.filter(id=news_id).filter(user_id=user.get('id')).first()
+
+
+
+    return {"news": news,
+            'link': request.url_for('get_favorite_news', news_id=news_id),
+            }
