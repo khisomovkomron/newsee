@@ -4,7 +4,7 @@ TORTOISE_ORM = {
     "connections": {"default": 'postgres://postgres:1234@localhost/NewseeDatabase'},
     "apps": {
         "models": {
-            "models": APPS_MODELS,
+            "models": ['db.models', 'aerich.models'],
             "default_connection": "default",
         }
     },

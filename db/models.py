@@ -18,7 +18,7 @@ class Users(models.Model):
         return self.username
     
     class Meta:
-        ordering = ["username"]
+        ordering = ["created_at"]
 
 
 class News(models.Model):
@@ -37,3 +37,20 @@ class News(models.Model):
     
     class Meta:
         ordering = ["datetime"]
+
+
+class UserNews(models.Model):
+
+    id = fields.UUIDField(pk=True)
+    title = fields.CharField(max_length=200, null=True)
+    description = fields.TextField(null=True)
+    link_to_news = fields.TextField(null=True)
+    image_url = fields.TextField(null=True)
+    content = fields.TextField(null=True)
+    language = fields.CharField(max_length=50, null=True)
+    creator = fields.TextField(null=True)
+    user = fields.ForeignKeyField(model_name='models.Users', related_name='user_news')
+    user_comment = fields.TextField(null=True)
+
+    class Meta:
+        ordering = ["id"]

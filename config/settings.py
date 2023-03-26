@@ -6,7 +6,7 @@ SECRET_KEY = "wadwad12e231iurhn342iurn"
 ALGORITHM = 'HS256'
 
 APPS_MODELS = [
-    "db.models",
+    "newsee.db.models",
     "aerich.models",
 ]
 
