@@ -1,9 +1,9 @@
 import requests
 from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
+from config.settings import KeysConfig
 
+keys_config = KeysConfig()
 URL = "https://pro-api.coinmarketcap.com"
-API_kEY = '5e4d440d-3c6e-47d0-9670-668ede220abb'
-
 
 class Crypto:
 
@@ -20,7 +20,7 @@ class Crypto:
         }
 
         self.headers = {'Accepts': 'application/json',
-                        'X-CMC_PRO_API_KEY': API_kEY}
+                        'X-CMC_PRO_API_KEY': keys_config.coinmarketapikey}
 
     def crypto_currency_map(self):
         endpoint = '/v1/cryptocurrency/map'

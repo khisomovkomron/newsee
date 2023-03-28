@@ -5,6 +5,7 @@ from newsapi import NewsApiClient
 
 keys_config = KeysConfig()
 
+
 class NewsAbstract(ABC):
     category: Optional[str] | None = None
     datetime: Optional[str] | None = None
@@ -30,7 +31,7 @@ class NewsAbstract(ABC):
 class NewsApi(NewsAbstract):
     
     def __init__(self):
-        self.newsapi = NewsApiClient(api_key=keys_config.NEWSAPIKEY)
+        self.newsapi = NewsApiClient(api_key=keys_config.newsapikey)
     
     def top_headlines(self, category=None, datetime=None, language='en', country=None, page_size=None, page=None):
         top_headlines = self.newsapi.get_top_headlines(category=category,

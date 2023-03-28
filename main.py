@@ -33,7 +33,7 @@ database_config = DatabaseConfig()
 
 register_tortoise(
     app,
-    db_url=database_config.databse_url,
+    db_url=database_config.database_url,
     modules={'models': ['db.models', 'aerich.models']},
     generate_schemas=False,
     add_exception_handlers=True
