@@ -2,7 +2,7 @@ from application.stocks import stocks
 from application.news import news
 from application.crypto import crypto
 from application.auth import auth
-from application.user import users, user_favorite_news, user_news
+from application.user import user_news, users, user_favorite_news
 
 from fastapi import FastAPI
 from tortoise.contrib.fastapi import register_tortoise
@@ -42,7 +42,7 @@ register_tortoise(
 if __name__ == "__main__":
 
     uvicorn.run(
-        'main:app',
+        'src.main:app',
         host=app_config.server_host,
         port=app_config.server_port,
         reload=True)

@@ -24,39 +24,42 @@ router = APIRouter(
 
 
 @router.get('/hotnews/', response_model=Page[ReadNews])
-async def get_user_hot_news(user: dict = Depends(get_current_user),
+async def get_user_hot_news(news: Depends(NewsApi),
+                            user: dict = Depends(get_current_user),
                             language: str = 'en',
                             country: str = 'us'):
     if not user:
         raise get_user_exception()
 
-    hotnews = NewsApi().top_headlines(language=language, country=country, page_size=50)
+    hotnews = news.top_headlines(language=language, country=country, page_size=50)
 
     return paginate(hotnews)
 
 
 @router.get('/breaking/', response_model=Page[ReadNews])
-async def get_user_breaking(user: dict = Depends(get_current_user),
+async def get_user_breaking(news: Depends(NewsApi),
+                            user: dict = Depends(get_current_user),
                             language: str = "en",
                             country: str = 'us'):
 
     if not user:
         raise get_user_exception()
 
-    breaking = NewsApi().breaking_news(language=language, country=country, page_size=50)
+    breaking = news.breaking_news(language=language, country=country, page_size=50)
 
     return paginate(breaking)
 
 
 @router.get('/mainpage/', response_model=Page[ReadNews])
-async def get_user_mainpage(user: dict= Depends(get_current_user),
+async def get_user_mainpage(news: Depends(NewsApi),
+                            user: dict= Depends(get_current_user),
                             language: str = "en",
                             country: str = 'us'):
 
     if not user:
         raise get_user_exception()
 
-    mainpage = NewsApi().all_news(page_size=50)
+    mainpage = news.all_news(page_size=50)
 
     return paginate(mainpage)
 
@@ -66,7 +69,8 @@ olddate = today.replace(day=int(1))
 
 
 @router.get("/search/", response_model=Page[ReadNews])
-async def get_user_search(user: dict = Depends(get_current_user),
+async def get_user_search(news: NewsApi,
+                          user: dict = Depends(get_current_user),
                           q: str | None = 'news',
                           sources: str = None,
                           qintitle: str = None,
@@ -77,7 +81,7 @@ async def get_user_search(user: dict = Depends(get_current_user),
     if not user:
         raise get_user_exception()
 
-    search = NewsApi().all_news(q=q,
+    search = news.all_news(q=q,
                                 sources=sources,
                                 qintitle=qintitle,
                                 domains=domains,
@@ -109,12 +113,13 @@ class MyCategory(str, Enum):
 
 
 @router.get('/news_by_category', response_model=Page[ReadNews])
-async def news_by_category(signleSelectionDropdown: MyCategory,
+async def news_by_category(news: NewsApi,
+                           signleSelectionDropdown: MyCategory,
                            language: str = 'en',
                            country: str = 'us'):
     singleDropdownValue = signleSelectionDropdown.value
 
-    newsByCategory = NewsApi().top_headlines(category=singleDropdownValue,
+    newsByCategory = news.top_headlines(category=singleDropdownValue,
                                              language=language,
                                              country=country,
                                              page_size=50)

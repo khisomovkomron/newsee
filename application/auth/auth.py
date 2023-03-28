@@ -55,16 +55,3 @@ async def login_for_access_token(response: Response, form_data: OAuth2PasswordRe
             "username": user.username,
             "token": create_access_token(form_data.username, user.id)}
 
-
-@router.get('/header')
-async def get_header(response: Response, header: str | None = Header(default=None)):
-
-    response.headers['NEW_HEADER'] = "Header"
-
-    if header is not None:
-        return {'HEADER': header}
-    else:
-        return {
-            'HEADER': 'incorrect Header'
-        }
-

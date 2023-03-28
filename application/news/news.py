@@ -4,7 +4,7 @@ from enum import Enum
 sys.path.append('../..')
 
 from fastapi_pagination import Page, paginate, add_pagination
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 
 from application.news.schemas_news import ReadNews
 from db.models import News
@@ -24,21 +24,21 @@ router = APIRouter(
 
 @router.get('/hotnews', response_model=Page[ReadNews])
 async def get_hot(language: str = 'en', country: str = 'us', category: str = None):
-    hot_news = NewsApi().top_headlines(language=language, country=country, category=category, page_size=5)
+    hot_news = news.top_headlines(language=language, country=country, category=category, page_size=5)
     
     return paginate(hot_news)
 
 
 @router.get('/breakingnews', response_model=Page[ReadNews])
-async def get_breaking(language: str = 'en', country: str = 'us'):
-    breaking_news = NewsApi().breaking_news(language=language, country=country, page_size=5)
+async def get_breaking(news: Depends(NewsApi), language: str = 'en', country: str = 'us'):
+    breaking_news = news.breaking_news(language=language, country=country, page_size=5)
     
     return paginate(breaking_news)
 
 
 @router.get('/mainpage', response_model=Page[ReadNews])
-async def get_main():
-    all_news = NewsApi().all_news(page_size=5)
+async def get_main(news: Depends(NewsApi)):
+    all_news = news.all_news(page_size=5)
     
     return paginate(all_news)
     
@@ -48,14 +48,15 @@ olddate = today.replace(day=int(1))
 
 
 @router.get('/search_news', response_model=Page[ReadNews])
-async def get_news(q: str | None = 'news',
+async def get_news(news: Depends(NewsApi),
+                   q: str | None = 'news',
                    sources: str = None,
                    qintitle: str = None,
                    domains: str = None,
                    from_param: str = olddate,
                    to: str = today,
                    language: str = 'en'):
-    search = NewsApi().all_news(q=q,
+    search = news.all_news(q=q,
                                 sources=sources,
                                 qintitle=qintitle,
                                 domains=domains,
@@ -86,12 +87,13 @@ class MyCategory(str, Enum):
 
 
 @router.get('/news_by_category', response_model=Page[ReadNews])
-async def news_by_category(singleSelectionDropdown: MyCategory,
+async def news_by_category(news: Depends(NewsApi),
+                           singleSelectionDropdown: MyCategory,
                            language: str = 'en',
                            country: str = 'us'):
     singleDropdownValue = singleSelectionDropdown.value
 
-    newsByCategory = NewsApi().top_headlines(category=singleDropdownValue,
+    newsByCategory = news.top_headlines(category=singleDropdownValue,
                                              language=language,
                                              country=country,
                                              page_size=5)
