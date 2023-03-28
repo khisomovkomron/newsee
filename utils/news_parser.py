@@ -1,9 +1,9 @@
 from abc import ABC, abstractmethod
-from config import settings
-from typing import Optional, List
+from config.settings import KeysConfig
+from typing import Optional
 from newsapi import NewsApiClient
-from pprint import PrettyPrinter
 
+keys_config = KeysConfig()
 
 class NewsAbstract(ABC):
     category: Optional[str] | None = None
@@ -30,7 +30,7 @@ class NewsAbstract(ABC):
 class NewsApi(NewsAbstract):
     
     def __init__(self):
-        self.newsapi = NewsApiClient(api_key='4394d565d26741159257f1fd474a7031')
+        self.newsapi = NewsApiClient(api_key=keys_config.NEWSAPIKEY)
     
     def top_headlines(self, category=None, datetime=None, language='en', country=None, page_size=None, page=None):
         top_headlines = self.newsapi.get_top_headlines(category=category,
