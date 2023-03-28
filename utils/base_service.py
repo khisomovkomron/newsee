@@ -4,11 +4,9 @@ from fastapi import  HTTPException
 from pydantic import BaseModel
 from tortoise import models
 from db.models import Users
-from db.schemas import CreateUser, \
+from application.user.schemas import CreateUser, \
     UserVerification, \
-    UserPublic, \
-    user_get_pydantic, \
-    user_create_pydantic
+    user_get_pydantic
 
 ModelType = TypeVar('ModelType', bound=models.Model)
 CreateSchemaType = TypeVar('CreateSchemaType', bound=BaseModel)

@@ -1,10 +1,10 @@
 import sys
-sys.path.append('..')
+sys.path.append('../..')
 
 from utils.auth_helpers import \
     create_access_token
 
-from utils.all_exceptions import \
+from utils.exceptions import \
     get_user_exception, \
     user_exception
 
@@ -12,7 +12,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from fastapi import Depends, APIRouter, Header, Response
 from logs.loguru import fastapi_logs
 
-from db.schemas import CreateUser, UserPublic
+from application.user.schemas import CreateUser, UserPublic
 from db import models
 from utils.auth_helpers import authenticate_user
 from tortoise.expressions import Q

@@ -1,18 +1,13 @@
-import datetime
 import sys
-from enum import Enum
-from typing import List
 
-sys.path.append('..')
+sys.path.append('../..')
 
 from utils.auth_helpers import get_current_user
-from fastapi_pagination import Page, paginate, add_pagination
-from utils.all_exceptions import get_user_exception
-from utils.news_parser import NewsApi
+from utils.exceptions import get_user_exception
 
-from db.schemas_news import FavoriteNews, NewsBase, UpdateComment
-from db.models import News, UserNews, Users
-from fastapi import APIRouter, Depends, Query, status, Request
+from application.news.schemas_news import UpdateComment
+from db.models import News, UserNews
+from fastapi import APIRouter, Depends, status, Request
 from logs.loguru import fastapi_logs
 
 logger = fastapi_logs(router='USER_FAVORITE_NEWS')

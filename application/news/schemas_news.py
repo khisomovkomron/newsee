@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
-from .models import News
+from db.models import News
 from tortoise.contrib.pydantic import pydantic_model_creator, pydantic_queryset_creator
 
 
