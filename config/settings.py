@@ -13,3 +13,6 @@ APPS_MODELS = [
 NEWSAPIKEY = '4394d565d26741159257f1fd474a7031'
 
 NEWSDATA = 'pub_14583905772b220dc2de06a8fad1d7c5fd54c'
+
+from pydantic import BaseSettings, Field
+
