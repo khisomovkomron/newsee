@@ -1,15 +1,16 @@
 import requests
 from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
+from config.settings import KeysConfig
 
-ALPHA_API_KEY = 'OV6PI1KJJNZ3TFBZ'
+key_config = KeysConfig()
+
 URL = 'https://www.alphavantage.co/query?'
-
 api_documentation_url = 'https://www.alphavantage.co/documentation/#'
 
 
 class StockParser:
 
-    def __init__(self, function, keywords=None, api_key=ALPHA_API_KEY, **kwargs):
+    def __init__(self, function, keywords=None, api_key=key_config.alpha_api_key, **kwargs):
         self.function = function
         self.keywords = keywords
         self.api_key = api_key

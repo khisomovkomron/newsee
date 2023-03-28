@@ -16,7 +16,7 @@ logger = fastapi_logs(router='AUTH')
 
 bcrypt_context = CryptContext(schemes=['bcrypt'], deprecated=['auto'])
 oauth2_bearer = OAuth2PasswordBearer(tokenUrl='token', description='Bearer Token')
-    
+key_config = settings.KeysConfig()
 
 def get_hashed_password(password):
     """hashed proved password"""
@@ -46,14 +46,14 @@ def create_access_token(username: str, user_id: int, expired_delta: Optional[tim
     else:
         expire = datetime.utcnow() + timedelta(minutes=15)
     encode.update({'exp': expire})
-    return jwt.encode(claims=encode, key=settings.SECRET_KEY, algorithm=settings.ALGORITHM)
+    return jwt.encode(claims=encode, key=key_config.secret_key, algorithm=key_config.algorithm)
 
 
 async def get_current_user(token: str = Depends(oauth2_bearer)):
     logger.info("GETTING CURRENT USER")
 
     try:
-        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+        payload = jwt.decode(token, key_config.secret_key, algorithms=[key_config.algorithm])
         username: str = payload.get('sub')
         user_id: str = payload.get('id')
         

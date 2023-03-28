@@ -10,9 +10,11 @@ from loguru import logger
 from config.settings import DatabaseConfig, AppConfig
 import uvicorn
 
+app_config = AppConfig()
+
 
 app = FastAPI(
-    title='NEWSEE',
+    title=app_config.project_name,
     description='A Platform for all news that you see'
 )
 
@@ -28,7 +30,6 @@ app.include_router(router=stocks.router)
 logger.info('    RUNNING main.py')
 
 database_config = DatabaseConfig()
-app_config = AppConfig()
 
 register_tortoise(
     app,

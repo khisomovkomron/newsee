@@ -3,9 +3,6 @@ import os
 
 PROJECT_NAME = "newsee"
 
-SECRET_KEY = "wadwad12e231iurhn342iurn"
-ALGORITHM = 'HS256'
-
 APPS_MODELS = [
     "newsee.db.models",
     "aerich.models",
@@ -43,3 +40,16 @@ class DatabaseConfig(BaseSettings):
     @property
     def databse_url(self) -> str:
         return f"{self.protocol}://{self.username}:{self.password}@{self.host}/{self.database}"
+
+
+class KeysConfig(BaseSettings):
+
+    class Config:
+        env_file = ".env"
+        env_file_encoding = "utf-8"
+
+    secret_key: str = Field(env="SECRET_KEY")
+    algorithm: str = Field(env="ALGORITHM", default="HS256")
+    newsapikey: str = Field(env="NEWSAPIKEY")
+    newsdata: str = Field(env="NEWSDATA")
+    alpha_api_key: str = Field(env="ALPHA_API_KEY")
