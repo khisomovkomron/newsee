@@ -1,1 +1,5 @@
-SQLALCHEMY_DATABASE_URL = "postgres://postgres:1234@localhost/NewseeDatabase"
+from config.settings import DatabaseConfig
+
+database_config = DatabaseConfig()
+
+SQLALCHEMY_DATABASE_URL = database_config.databse_url
