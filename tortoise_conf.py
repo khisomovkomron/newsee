@@ -1,7 +1,9 @@
-from config.settings import APPS_MODELS
+from config.settings import DatabaseConfig
+
+database_config = DatabaseConfig()
 
 TORTOISE_ORM = {
-    "connections": {"default": 'postgres://postgres:1234@localhost/NewseeDatabase'},
+    "connections": {"default": database_config.database_url},
     "apps": {
         "models": {
             "models": ['db.models', 'aerich.models'],
