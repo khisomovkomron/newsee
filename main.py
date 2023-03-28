@@ -1,4 +1,9 @@
-from routers import user_news, users, auth, news, crypto, stocks, user_favorite_news
+from application.stocks import stocks
+from application.news import news
+from application.crypto import crypto
+from application.auth import auth
+from application.user import users, user_favorite_news, user_news
+
 from fastapi import FastAPI
 from tortoise.contrib.fastapi import register_tortoise
 from loguru import logger
@@ -19,6 +24,7 @@ app.include_router(router=user_favorite_news.router)
 app.include_router(router=news.router)
 app.include_router(router=crypto.router)
 app.include_router(router=stocks.router)
+
 logger.info('    RUNNING main.py')
 
 database_config = DatabaseConfig()

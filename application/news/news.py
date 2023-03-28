@@ -1,12 +1,12 @@
 import sys
 from enum import Enum
 
-sys.path.append('..')
+sys.path.append('../..')
 
 from fastapi_pagination import Page, paginate, add_pagination
 from fastapi import APIRouter
 
-from db.schemas_news import ReadNews
+from application.news.schemas_news import ReadNews
 from db.models import News
 from logs.loguru import fastapi_logs
 from utils.news_parser import NewsApi

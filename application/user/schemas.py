@@ -4,7 +4,7 @@ from typing import Optional
 from pydantic import BaseModel
 
 from tortoise.contrib.pydantic import pydantic_model_creator
-from .models import Users
+from db.models import Users
 
 
 class UserBase(BaseModel):

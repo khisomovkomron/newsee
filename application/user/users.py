@@ -1,16 +1,16 @@
-import datetime
 import sys
 from typing import List
 
-sys.path.append('..')
+sys.path.append('../..')
 
 from utils.auth_helpers import \
     get_hashed_password, \
     get_current_user
-from utils.all_exceptions import get_user_exception
+from utils.exceptions import get_user_exception
 
-from db import models, schemas
-from db.schemas import UserVerification, UserPublic
+from db import models
+from application.user import schemas
+from application.user.schemas import UserVerification, UserPublic
 
 from fastapi import APIRouter, Depends
 from logs.loguru import fastapi_logs

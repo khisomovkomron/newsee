@@ -2,7 +2,7 @@ from logs.loguru import fastapi_logs
 from fastapi import APIRouter, HTTPException
 from fastapi_pagination import Page, paginate, add_pagination
 
-from db.schemas_crypto import CryptoCurrency, Fiat
+from application.crypto.schemas_crypto import CryptoCurrency, Fiat
 from utils.crypto_parser import Crypto
 from utils.stock_parser import StockParser
 
