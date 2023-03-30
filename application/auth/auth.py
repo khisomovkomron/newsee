@@ -5,8 +5,8 @@ from utils.auth_helpers import \
     create_access_token
 
 from utils.exceptions import \
-    get_user_exception, \
-    user_exception
+    GetUserException, \
+    UserException
 
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi import Depends, APIRouter, Header, Response
@@ -32,7 +32,7 @@ router = APIRouter(
 async def create_new_user(create_user: CreateUser):
     """Create new user: get user model from DB and pass all variables from CreateUser fields to db fields"""
     if not models.Users.filter(Q(username=create_user.username)).exists():
-        return user_exception()
+        return UserException()
 
     hash_password = get_hashed_password(create_user.dict().pop("password"))
     user = await models.Users.create(**create_user.dict(exclude={"password"}), hashed_password=hash_password)
@@ -49,7 +49,7 @@ async def login_for_access_token(response: Response, form_data: OAuth2PasswordRe
     response.headers['Token'] = create_access_token(form_data.username, user.id)
 
     if not user:
-        raise get_user_exception()
+        raise GetUserException()
     
     return {"id": user.id,
             "username": user.username,

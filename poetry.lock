@@ -379,6 +379,18 @@ build-docs = ["cloud-sptheme (>=1.10.1)", "sphinx (>=1.6)", "sphinxcontrib-fullt
 totp = ["cryptography"]
 
 [[package]]
+name = "punq"
+version = "0.6.2"
+description = "An IOC Container for Python 3.6+"
+category = "main"
+optional = false
+python-versions = ">=3.6.2,<4.0.0"
+files = [
+    {file = "punq-0.6.2-py3-none-any.whl", hash = "sha256:8d365bdc01038897dfcc0c9bf63bc8910a95afc46e5e427c2a7abbda7144502b"},
+    {file = "punq-0.6.2.tar.gz", hash = "sha256:4d824c92ca640feefb080c1ecdd034e37f79833b3cb88dacac38ed7e048f4dca"},
+]
+
+[[package]]
 name = "pyasn1"
 version = "0.4.8"
 description = "ASN.1 types and codecs"
@@ -701,4 +713,4 @@ dev = ["black (>=19.3b0)", "pytest (>=4.6.2)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "261232fe745226b3446b437a89659f9fbfc5442c8cc67347a9f6533972089236"
+content-hash = "debad9a213f058366edf2a4b3821062d74dd2bb78eec29745aa84d396e8cf552"

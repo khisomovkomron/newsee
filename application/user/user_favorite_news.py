@@ -3,7 +3,7 @@ import sys
 sys.path.append('../..')
 
 from utils.auth_helpers import get_current_user
-from utils.exceptions import get_user_exception
+from utils.exceptions import GetUserException
 
 from application.news.schemas_news import UpdateComment
 from db.models import News, UserNews
@@ -30,7 +30,7 @@ async def get_all_news():
 @router.get("/")
 async def get_favorite_news(user: dict = Depends(get_current_user)):
     if not user:
-        raise get_user_exception()
+        raise GetUserException()
 
     all_news = await UserNews.filter(user_id=user.get('id')).all()
 
@@ -41,7 +41,7 @@ async def get_favorite_news(user: dict = Depends(get_current_user)):
 async def get_favorite_news(news_id: str,
                             user: dict = Depends(get_current_user)):
     if not user:
-        raise get_user_exception()
+        raise GetUserException()
 
     news = await UserNews.filter(id=news_id).filter(user_id=user.get('id')).first()
 
@@ -51,7 +51,7 @@ async def get_favorite_news(news_id: str,
 async def create_favorite_news(news_id: str,
                                user: dict = Depends(get_current_user)):
     if not user:
-        raise get_user_exception()
+        raise GetUserException()
 
     news = await News.filter(id=news_id).first()
     if not news:
@@ -72,7 +72,7 @@ async def add_comment_to_news(news_id: str,
                               comment: UpdateComment,
                               user: dict = Depends(get_current_user)):
     if not user:
-        raise get_user_exception()
+        raise GetUserException()
 
     await UserNews.filter(id=news_id).update(user_comment=comment)
 
@@ -84,7 +84,7 @@ async def add_comment_to_news(news_id: str,
 @router.delete("/{news_id}", status_code=status.HTTP_200_OK)
 async def delete_favorite_news(news_id: str, user: dict = Depends(get_current_user)):
     if not user:
-        raise get_user_exception()
+        raise GetUserException()
 
     favorite_news = await UserNews.filter(id=news_id)
 
@@ -104,11 +104,9 @@ async def share_favorite_news(news_id: str,
                               request: Request,
                               user: dict = Depends(get_current_user)):
     if not user:
-        raise get_user_exception()
+        raise GetUserException()
 
     news = await UserNews.filter(id=news_id).filter(user_id=user.get('id')).first()
-
-
 
     return {"news": news,
             'link': request.url_for('get_favorite_news', news_id=news_id),

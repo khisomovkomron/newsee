@@ -6,7 +6,7 @@ sys.path.append('../..')
 from utils.auth_helpers import \
     get_hashed_password, \
     get_current_user
-from utils.exceptions import get_user_exception
+from utils.exceptions import GetUserException
 
 from db import models
 from application.user import schemas
@@ -56,7 +56,7 @@ async def user_password_change(verify: UserVerification,
     """Change password authenticated"""
 
     if user is None:
-        raise get_user_exception()
+        raise GetUserException()
     hashed_password = get_hashed_password(verify.new_password)
 
     try:
@@ -92,7 +92,7 @@ async def delete_user(user_id: int,
     logger.info("DELETE AUTHENTICATED USER")
 
     if user is None:
-        return get_user_exception()
+        return GetUserException()
 
     await models.Users.filter(id=user_id).delete()
 

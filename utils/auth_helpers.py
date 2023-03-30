@@ -7,7 +7,7 @@ from jose import jwt, JWTError
 from passlib.context import CryptContext
 
 from db import models
-from utils.exceptions import get_user_exception
+from utils.exceptions import TokenException, GetUserException
 from utils.base_service import user_service
 from logs.loguru import fastapi_logs
 from config import settings
@@ -58,7 +58,7 @@ async def get_current_user(token: str = Depends(oauth2_bearer)):
         user_id: str = payload.get('id')
         
         if username is None or user_id is None:
-            raise get_user_exception()
+            raise GetUserException()
         return {'username': username, 'id': user_id}
     except JWTError:
-        raise get_user_exception()
+        raise TokenException()

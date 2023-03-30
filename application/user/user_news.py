@@ -6,7 +6,7 @@ sys.path.append('../..')
 
 from utils.auth_helpers import get_current_user
 from fastapi_pagination import Page, paginate, add_pagination
-from utils.exceptions import get_user_exception
+from utils.exceptions import GetUserException
 from utils.news_parser import NewsApi
 
 from application.news.schemas_news import ReadNews
@@ -28,7 +28,7 @@ async def get_user_hot_news(user: dict = Depends(get_current_user),
                             language: str = 'en',
                             country: str = 'us'):
     if not user:
-        raise get_user_exception()
+        raise GetUserException()
 
     hotnews = NewsApi().top_headlines(language=language, country=country, page_size=50)
 
@@ -41,7 +41,7 @@ async def get_user_breaking(user: dict = Depends(get_current_user),
                             country: str = 'us'):
 
     if not user:
-        raise get_user_exception()
+        raise GetUserException()
 
     breaking = NewsApi().breaking_news(language=language, country=country, page_size=50)
 
@@ -54,7 +54,7 @@ async def get_user_mainpage(user: dict= Depends(get_current_user),
                             country: str = 'us'):
 
     if not user:
-        raise get_user_exception()
+        raise GetUserException()
 
     mainpage = NewsApi().all_news(page_size=50)
 
@@ -75,7 +75,7 @@ async def get_user_search(user: dict = Depends(get_current_user),
                           to: str = today,
                           language: str = 'en'):
     if not user:
-        raise get_user_exception()
+        raise GetUserException()
 
     search = NewsApi().all_news(q=q,
                                 sources=sources,
