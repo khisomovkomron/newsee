@@ -54,4 +54,3 @@ async def login_for_access_token(response: Response, form_data: OAuth2PasswordRe
     return {"id": user.id,
             "username": user.username,
             "token": create_access_token(form_data.username, user.id)}
-

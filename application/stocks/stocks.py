@@ -1,5 +1,5 @@
 from logs.loguru import fastapi_logs
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter
 
 from utils.stock_parser import StockParser
 
@@ -13,9 +13,9 @@ router = APIRouter(
 
 
 @router.get('/search_ticker')
-async def get_exchange_rate(stocks: Depends(StockParser), ticker: str = "AAPL"):
-    search_ticker = stocks(function="SYMBOL_SEARCH",
-                           keywords=ticker)
+async def get_exchange_rate(ticker: str = "AAPL"):
+    search_ticker = StockParser(function="SYMBOL_SEARCH",
+                                keywords=ticker)
 
     ticker = search_ticker.general_request()['bestMatches']
 
@@ -23,19 +23,18 @@ async def get_exchange_rate(stocks: Depends(StockParser), ticker: str = "AAPL"):
 
 
 @router.get('/quote')
-async def get_global_quote(stocks: Depends(StockParser), ticker: str = "AAPL"):
-    quote = stocks(function="GLOBAL_QUOTE", symbol=ticker)
+async def get_global_quote(ticker: str = "AAPL"):
+    quote = StockParser(function="GLOBAL_QUOTE", symbol=ticker)
 
     global_quote = quote.general_request()
 
     return global_quote
 
 @router.get('/intraday_prices')
-async def get_intraday_prices(stocks: Depends(StockParser),
-                              ticker: str = "AAPL",
+async def get_intraday_prices(ticker: str = "AAPL",
                               interval: str = '60min',
                               outputsize: str = 'compact'):
-    intraday = stocks(function="TIME_SERIES_INTRADAY", symbol=ticker, interval=interval, outputsize=outputsize)
+    intraday = StockParser(function="TIME_SERIES_INTRADAY", symbol=ticker, interval=interval, outputsize=outputsize)
 
     intraday_prices = intraday.general_request()
 
@@ -43,8 +42,8 @@ async def get_intraday_prices(stocks: Depends(StockParser),
 
 
 @router.get('/weekly_prices')
-async def get_weekly_prices(stocks: Depends(StockParser), ticker: str = "AAPL"):
-    weekly = stocks(function="TIME_SERIES_WEEKLY", symbol=ticker)
+async def get_weekly_prices(ticker: str = "AAPL"):
+    weekly = StockParser(function="TIME_SERIES_WEEKLY", symbol=ticker)
 
     weekly_prices = weekly.general_request()
 
@@ -52,8 +51,8 @@ async def get_weekly_prices(stocks: Depends(StockParser), ticker: str = "AAPL"):
 
 
 @router.get('/company_overview')
-async def get_company_overview(stocks: Depends(StockParser), ticker: str = "AAPL"):
-    overview = stocks(function="OVERVIEW", symbol=ticker)
+async def get_company_overview(ticker: str = "AAPL"):
+    overview = StockParser(function="OVERVIEW", symbol=ticker)
 
     company_overview = overview.general_request()
 
