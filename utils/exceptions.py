@@ -1,4 +1,4 @@
-from fastapi import HTTPException
+from fastapi import HTTPException, status
 from starlette import status
 from logs.loguru import fastapi_logs
 
@@ -6,37 +6,29 @@ from logs.loguru import fastapi_logs
 logger = fastapi_logs(router='AUTH')
 
 
-def get_user_exception():
-    """ returns HTTP exception if users credentials are wrong"""
-    credential_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail='Could not validate credentials',
-        headers={'WWW-Authenticate': 'Bearer'}
-    )
-    logger.critical(credential_exception)
-    return credential_exception
+class CustomException(Exception):
+    """Исключение доменной логики"""
 
-def user_exception():
-    raise HTTPException(status_code=400, detail="User already exists")
+    status: int
+    message: str
 
 
-def token_exception():
-    """returns HTTP exception if provided token by user is invalid"""
-    token_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail='Incorrect username or password',
-        headers={'WWW-Authenticate': 'Bearer'}
-    )
-    logger.critical(token_exception)
-    return token_exception
+class GetUserException(CustomException):
+    """Incorrect user credentials are provided"""
+
+    status = status.HTTP_401_UNAUTHORIZED
+    message = 'Could not validate credentials'
 
 
-def http_exception():
-    raise HTTPException(status_code=404, detail='Not found')
+class UserException(CustomException):
+    """ User already exist"""
+    status = status.HTTP_400_BAD_REQUEST
+    message = 'User already exists'
 
 
-def successful_response(status_code):
-    return {
-        'status': status_code,
-        'transaction': 'Successful'
-    }
+class TokenException(CustomException):
+    """Invalid Token"""
+
+    status = status.HTTP_401_UNAUTHORIZED
+    message = 'Incorrect username or password'
+
